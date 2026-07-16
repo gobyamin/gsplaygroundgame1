@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>경청지놀 여름 도둑을 잡아라</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2430;
+    --heat:#E8481C; --sun:#FFB627; --cool:#1D8FCB; --ice:#DFF3FC;
+    --note:#FFF3B0; --news:#F6F1E5;
+    --bg-h:24; --bg-s:100%; --bg-l:96%;
+    --accent:#E8481C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Gowun Dodum',sans-serif; color:var(--ink);
+    background:hsl(var(--bg-h) var(--bg-s) var(--bg-l));
+    transition:background 1.2s ease;
+    display:flex; justify-content:center; overflow:hidden;
+  }
+  #app{width:100%; max-width:430px; height:100dvh; position:relative; display:flex; flex-direction:column}
+  .display{font-family:'Black Han Sans',sans-serif; font-weight:400; letter-spacing:.01em}
+  .btn{
+    display:block; width:100%; border:none; cursor:pointer;
+    font-family:'Black Han Sans',sans-serif; font-size:1.05rem; color:#fff;
+    background:var(--accent); padding:14px; border-radius:13px;
+    box-shadow:0 4px 0 rgba(0,0,0,.18); transition:transform .08s, background 1.2s;
+  }
+  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.18)}
+
+  /* ================= 인트로 : 신문 호외 ================= */
+  #intro{height:100dvh; padding:12px 14px; display:flex; flex-direction:column; gap:10px}
+  .paper{
+    flex:1; min-height:0; background:var(--news); border:2px solid var(--ink);
+    border-radius:6px; padding:12px 14px; position:relative;
+    box-shadow:4px 4px 0 rgba(30,36,48,.18);
+    display:flex; flex-direction:column; font-family:'Gowun Batang',serif;
+    overflow-y:auto;
+  }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    border-bottom:3px double var(--ink); padding-bottom:6px; flex-shrink:0;
+  }
+  .masthead .name{font-family:'Black Han Sans'; font-size:1.3rem; letter-spacing:.2em}
+  .masthead .date{font-size:.62rem; color:#555}
+  .extra{
+    position:absolute; top:8px; right:-8px; transform:rotate(9deg);
+    font-family:'Black Han Sans'; font-size:.68rem; letter-spacing:.2em;
+    color:#fff; background:var(--heat); padding:3px 12px; box-shadow:2px 2px 0 rgba(0,0,0,.2);
+  }
+  .headline{
+    font-family:'Black Han Sans'; font-size:clamp(1.25rem, 6vw, 1.6rem);
+    line-height:1.28; margin:auto 0 4px; padding-top:10px; flex-shrink:0;
+  }
+  .headline .hot{color:var(--heat)}
+  .article{
+    font-size:clamp(.72rem, 3vw, .8rem); line-height:1.62; color:#333;
+    border-bottom:1.5px solid var(--ink); padding-bottom:8px; flex-shrink:0;
+  }
+  .article b{color:var(--heat)}
+  /* 속보 박스 : 도둑 캐릭터 */
+  .flash-box{
+    margin:12px 0 auto; display:flex; align-items:center; gap:10px; flex-shrink:0;
+    background:#fff; border:2px dashed var(--heat); border-radius:8px; padding:10px 12px;
+  }
+  .flash-box svg{height:clamp(92px, 24dvh, 130px); width:auto; flex-shrink:0}
+  .flash-txt{font-family:'Gowun Dodum'}
+  .flash-txt .bstamp{
+    display:inline-block; font-family:'Black Han Sans'; font-size:.66rem; color:#fff;
+    background:var(--ink); padding:2px 9px; border-radius:3px; letter-spacing:.15em; margin-bottom:5px;
+  }
+  .flash-txt h2{font-family:'Black Han Sans'; font-size:clamp(.98rem,4.4vw,1.15rem); line-height:1.3; margin-bottom:4px}
+  .flash-txt h2 span{color:var(--heat)}
+  .flash-txt p{font-size:clamp(.7rem,3vw,.78rem); line-height:1.55; color:#444}
+  .wanted{
+    margin-top:6px; font-size:.62rem; color:#8a6d00; background:var(--note);
+    display:inline-block; padding:2px 8px; border-radius:4px; transform:rotate(-1deg);
+  }
+
+  /* ================= 메인 : 건물 ================= */
+  #game{display:none; height:100dvh; flex-direction:column}
+  header#hud{
+    background:hsl(var(--bg-h) var(--bg-s) calc(var(--bg-l) - 4%));
+    border-bottom:2.5px solid var(--ink);
+    padding:9px 16px 8px; transition:background 1.2s; flex-shrink:0;
+  }
+  #hud .row{display:flex; align-items:flex-end; justify-content:space-between}
+  #tempNow{font-family:'Black Han Sans'; font-size:1.8rem; line-height:1; color:var(--accent); transition:color 1.2s}
+  #tempNow small{font-size:.8rem}
+  #tempLabel{font-size:.64rem; letter-spacing:.1em; color:#666}
+  #found{font-size:.72rem; text-align:right; line-height:1.3}
+  #found b{font-family:'Black Han Sans'; font-size:1.1rem; color:var(--accent); transition:color 1.2s}
+  #bar{height:9px; border:2px solid var(--ink); border-radius:99px; margin-top:6px; overflow:hidden; background:#fff}
+  #barFill{height:100%; width:0%;
+    background:linear-gradient(90deg, var(--heat), var(--sun) 45%, var(--cool));
+    transition:width .9s cubic-bezier(.2,.8,.2,1);}
+
+  main{flex:1; min-height:0; padding:6px 14px 4px; display:flex; flex-direction:column}
+  .hint-line{font-size:.66rem; color:#666; text-align:center; margin-bottom:5px; flex-shrink:0}
+  #floors{flex:1; min-height:0; display:flex; flex-direction:column; gap:5px}
+  .floor{
+    flex:1; min-height:0;
+    background:#fff; border:2px solid var(--ink); border-radius:11px;
+    box-shadow:3px 3px 0 rgba(30,36,48,.12);
+    display:flex; align-items:center; gap:10px; padding:0 13px;
+    cursor:pointer; font-family:inherit; color:inherit; text-align:left; width:100%;
+    position:relative;
+  }
+  .floor.done{opacity:.88}
+  .floor.locked{background:#F1EEE9; border-color:#BBB; box-shadow:none; color:#999; cursor:default}
+  .floor.current{border-color:var(--accent); border-width:2.5px}
+  @keyframes glowPulse{0%,100%{box-shadow:3px 3px 0 rgba(30,36,48,.12), 0 0 0 0 rgba(232,72,28,.35)}50%{box-shadow:3px 3px 0 rgba(30,36,48,.12), 0 0 0 6px rgba(232,72,28,0)}}
+  .floor.current{animation:glowPulse 1.8s infinite}
+  .fnum{
+    font-family:'Black Han Sans'; font-size:.9rem; min-width:36px; height:min(36px,70%);
+    border:2px solid var(--ink); border-radius:9px;
+    display:flex; align-items:center; justify-content:center; background:var(--ice);
+    transition:background .5s; flex-shrink:0;
+  }
+  .floor.done .fnum{background:var(--cool); color:#fff; border-color:var(--cool)}
+  .floor.current .fnum{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .floor.locked .fnum{background:#E2DED8; border-color:#BBB; color:#999}
+  .fname{font-size:.82rem; font-weight:bold; line-height:1.2}
+  .fzone{font-size:.62rem; color:#888; line-height:1.2}
+  .floor.locked .fzone{color:#AAA}
+  .fstate{margin-left:auto; font-size:.95rem; flex-shrink:0}
+  footer{font-size:.56rem; color:#999; text-align:center; padding:4px 16px 7px; line-height:1.5; flex-shrink:0}
+
+  /* ================= 층 시트 ================= */
+  #sheetVeil{position:fixed; inset:0; background:rgba(20,24,34,.5); z-index:90; display:none; align-items:flex-end; justify-content:center}
+  #sheetVeil.show{display:flex}
+  #sheet{
+    width:100%; max-width:430px; background:#fff;
+    border:3px solid var(--ink); border-bottom:none; border-radius:20px 20px 0 0;
+    padding:15px 17px calc(14px + env(safe-area-inset-bottom));
+    animation:up .3s cubic-bezier(.2,1,.4,1); max-height:80dvh; overflow-y:auto;
+  }
+  @keyframes up{from{transform:translateY(60%)}}
+  #sheet .s-head{display:flex; align-items:center; gap:10px; margin-bottom:2px}
+  #sheet .s-head .fnum{width:38px; height:38px; font-size:.95rem; background:var(--accent); color:#fff; border-color:var(--accent)}
+  #sheet .s-title{font-size:.98rem; font-weight:bold}
+  #sheet .s-zone{font-size:.68rem; color:#888}
+  #sheet .close{margin-left:auto; border:none; background:#eee; border-radius:99px; width:30px; height:30px; font-size:.95rem; cursor:pointer}
+  .memo{
+    background:var(--note); padding:11px 13px 10px; margin:9px 0;
+    font-size:.84rem; line-height:1.58; position:relative;
+    transform:rotate(-.6deg); box-shadow:2px 3px 8px rgba(0,0,0,.12);
+    clip-path:polygon(0 4%, 4% 0, 96% 1%, 100% 6%, 99% 95%, 95% 100%, 3% 99%, 0 94%);
+  }
+  .memo .who{font-size:.63rem; letter-spacing:.1em; color:#8a6d00; display:block; margin-bottom:3px}
+  .scanBtn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; border:none; cursor:pointer; margin:2px 0 10px;
+    font-family:'Black Han Sans'; font-size:1.05rem; color:#fff;
+    background:var(--ink); padding:14px; border-radius:12px;
+    box-shadow:0 4px 0 rgba(0,0,0,.25);
+  }
+  .scanBtn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .qr-note{font-size:.66rem; color:#888; margin-bottom:6px}
+  .qr-grid{display:flex; gap:6px}
+  .qr{
+    flex:1; border:2px solid var(--ink); border-radius:9px;
+    background:#fff; font-size:.68rem; padding:10px 0 8px;
+    cursor:pointer; color:var(--ink); transition:transform .08s; line-height:1.3;
+  }
+  .qr b{font-family:'Black Han Sans'; font-size:.82rem; display:block}
+  .qr:active{transform:scale(.95)}
+  .qr.scanned{background:#eee; color:#aaa; border-color:#ccc}
+  .qr.gem{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+  /* ================= 카메라 스캐너 ================= */
+  #cam{position:fixed; inset:0; z-index:120; background:#000; display:none; flex-direction:column}
+  #cam.show{display:flex}
+  #cam video{flex:1; width:100%; object-fit:cover}
+  #camFrame{
+    position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
+    width:min(64vw,250px); aspect-ratio:1; border:3px solid rgba(255,255,255,.9);
+    border-radius:18px; box-shadow:0 0 0 200vmax rgba(0,0,0,.45); pointer-events:none;
+  }
+  #camMsg{
+    position:absolute; left:0; right:0; top:calc(44% + min(34vw,135px) + 14px);
+    text-align:center; color:#fff; font-size:.85rem; text-shadow:0 1px 3px #000;
+  }
+  #camClose{
+    position:absolute; top:calc(14px + env(safe-area-inset-top)); right:14px;
+    border:none; background:rgba(255,255,255,.18); color:#fff; border-radius:99px;
+    width:40px; height:40px; font-size:1.15rem; cursor:pointer; backdrop-filter:blur(4px);
+  }
+
+  /* ================= 토스트 ================= */
+  #toast{
+    position:fixed; left:50%; bottom:9dvh; transform:translateX(-50%);
+    background:var(--ink); color:#fff; font-size:.82rem; padding:10px 18px;
+    border-radius:99px; z-index:130; opacity:0; pointer-events:none;
+    transition:opacity .25s; max-width:86vw; text-align:center;
+  }
+  #toast.show{opacity:1}
+
+  /* ================= 결과 모달 ================= */
+  #veil{position:fixed; inset:0; background:rgba(20,24,34,.55); z-index:100; display:none; align-items:center; justify-content:center; padding:20px}
+  #veil.show{display:flex}
+  #modal{
+    width:100%; max-width:360px; background:#fff; border:3px solid var(--ink);
+    border-radius:18px; padding:19px 17px; text-align:center;
+    animation:pop .28s cubic-bezier(.2,1.4,.4,1); max-height:80dvh; overflow-y:auto;
+  }
+  @keyframes pop{from{transform:scale(.8); opacity:0}}
+  #modal .icon{font-size:2.2rem; margin-bottom:4px}
+  #modal h2{font-family:'Black Han Sans'; font-size:1.15rem; margin-bottom:8px}
+  #modal .quote{
+    font-size:.85rem; line-height:1.62; background:#f7f7f7; border-left:4px solid var(--ink);
+    padding:10px 12px; text-align:left; margin-bottom:8px; border-radius:0 8px 8px 0;
+  }
+  #modal .thief{
+    font-size:.79rem; line-height:1.55; color:#7a5c00; background:var(--note);
+    padding:9px 11px; border-radius:8px; text-align:left; margin-bottom:12px; transform:rotate(.4deg);
+  }
+  #modal .thief::before{content:"🕶 여름 도둑 : "; font-weight:bold}
+  #modal .drop{font-family:'Black Han Sans'; font-size:1.8rem; color:var(--cool); margin:4px 0 2px}
+  #modal .drop small{font-size:.82rem; color:var(--ink); display:block; font-family:'Gowun Dodum'}
+  #modal .btn{font-size:.92rem; padding:12px}
+
+  /* ================= 클리어 ================= */
+  #clear{display:none; height:100dvh; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); text-align:center; flex-direction:column; justify-content:space-evenly; gap:6px}
+  #clear .big{font-family:'Black Han Sans'; font-size:clamp(2.2rem,11vw,3rem); color:var(--cool); text-shadow:2px 2px 0 #fff; line-height:1}
+  #clear .big small{display:block; font-size:.82rem; color:var(--ink); text-shadow:none; font-family:'Gowun Dodum'; margin-top:4px}
+  #clear h2{font-family:'Black Han Sans'; font-size:clamp(1.2rem,5.6vw,1.5rem)}
+  #clear svg{width:min(52vw,210px); height:auto; margin:0 auto}
+  .capture-box{
+    background:#fff; border:3px solid var(--cool); border-radius:16px;
+    padding:12px 14px; margin:0 auto; width:100%; max-width:320px;
+  }
+  .capture-box .cap{font-size:.86rem; line-height:1.55; margin-bottom:8px}
+  .capture-box .cap b{color:var(--cool)}
+  .code-line{border-top:2px dashed var(--cool); padding-top:8px}
+  .code-line .lbl{font-size:.62rem; letter-spacing:.15em; color:#888}
+  .code-line .code{font-family:'Black Han Sans'; font-size:1.5rem; color:var(--cool); letter-spacing:.1em}
+
+  .snow{position:fixed; top:-30px; font-size:1.1rem; z-index:99; animation:fall linear forwards; pointer-events:none}
+  @keyframes fall{to{transform:translateY(110dvh) rotate(360deg); opacity:.2}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= 인트로 : 신문 호외 ================= -->
+  <section id="intro">
+    <div class="paper">
+      <span class="extra">호외</span>
+      <div class="masthead">
+        <span class="name">경청일보</span>
+        <span class="date">2026년 8월</span>
+      </div>
+      <h1 class="headline">경산 <span class="hot">39.9°C</span>…<br>40°C까지 단 0.1°C</h1>
+      <p class="article">
+        전국에 폭염이 쏟아진 7월 11일, 경북 경산 일부 지역의 낮 최고기온이 40도에 육박했다.
+        기상청 관측 기록에 따르면 이날 오후 2시 23분쯤 <b>경산시 하양읍 기온이 39.9도</b>를 찍었다.
+      </p>
+      <div class="flash-box">
+        <!-- 여름 도둑 캐릭터 -->
+        <svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" aria-label="여름 도둑">
+          <!-- 자루 -->
+          <path d="M78 92 q30 -6 30 26 q0 24 -24 24 q-22 0 -20 -22 q1 -16 14 -28" fill="#C9A15A" stroke="#8a6d3b" stroke-width="3"/>
+          <text x="93" y="126" font-size="16" text-anchor="middle">❄️</text>
+          <path d="M76 90 l10 8" stroke="#8a6d3b" stroke-width="3" stroke-linecap="round"/>
+          <!-- 몸통 : 줄무늬 -->
+          <rect x="30" y="72" width="44" height="46" rx="14" fill="#fff" stroke="#1E2430" stroke-width="3"/>
+          <path d="M30 84 h44 M30 96 h44 M30 108 h44" stroke="#1E2430" stroke-width="6"/>
+          <!-- 팔 -->
+          <path d="M32 82 q-14 6 -12 20" fill="none" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
+          <path d="M72 82 q10 4 10 12" fill="none" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
+          <!-- 얼굴 -->
+          <circle cx="52" cy="44" r="26" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
+          <!-- 비니 -->
+          <path d="M27 38 q1 -22 25 -22 q24 0 25 22 l-1 4 h-48 z" fill="#E8481C" stroke="#1E2430" stroke-width="3"/>
+          <rect x="26" y="38" width="52" height="8" rx="4" fill="#1E2430"/>
+          <!-- 아이마스크 -->
+          <rect x="32" y="48" width="40" height="13" rx="6.5" fill="#1E2430"/>
+          <circle cx="44" cy="54.5" r="4" fill="#fff"/>
+          <circle cx="60" cy="54.5" r="4" fill="#fff"/>
+          <circle cx="45" cy="55" r="1.8" fill="#1E2430"/>
+          <circle cx="61" cy="55" r="1.8" fill="#1E2430"/>
+          <!-- 씩 웃음 -->
+          <path d="M45 66 q7 5 14 0" fill="none" stroke="#1E2430" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 다리 -->
+          <path d="M42 118 v14 M62 118 v14" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
+          <!-- 땀방울 -->
+          <path d="M83 36 q4 6 0 9 q-4 -3 0 -9" fill="#7FD4FF"/>
+        </svg>
+        <div class="flash-txt">
+          <span class="bstamp">긴급 속보</span>
+          <h2>그날 밤, <span>시원함 도난 사건</span> 발생</h2>
+          <p>40°C를 막던 마지막 0.1°C가 사라졌다. 용의자는 경청지놀 1~7층 어딘가에 그것을 숨긴 것으로 추정. 층마다 남긴 메모가 유일한 단서다.</p>
+          <span class="wanted">WANTED — 목격 시 즉시 추리할 것</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn" onclick="startGame()">🕵️ 경청 수사대 — 수사 착수</button>
+  </section>
+
+  <!-- ================= 메인 ================= -->
+  <section id="game">
+    <header id="hud">
+      <div class="row">
+        <div>
+          <div id="tempLabel">현재 체감온도</div>
+          <div id="tempNow">39.9<small>°C</small></div>
+        </div>
+        <div id="found">되찾은 시원함<br><b>0</b> / 7</div>
+      </div>
+      <div id="bar"><div id="barFill"></div></div>
+    </header>
+    <main>
+      <p class="hint-line">1층부터 차례로 해결하세요 — 지금 수사 중인 층이 빛납니다</p>
+      <div id="floors"></div>
+    </main>
+    <footer>QR 스캔용 카메라는 판정에만 사용되며 촬영 이미지가 저장·전송되지 않습니다</footer>
+  </section>
+
+  <!-- ================= 클리어 ================= -->
+  <section id="clear">
+    <div class="big">22.0°<small>쾌적 — 시원함 복원 완료</small></div>
+    <h2>여름 도둑 검거 성공!</h2>
+    <!-- 검거 픽토그램 : 탐정 & 도둑 -->
+    <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" aria-label="탐정이 도둑을 검거한 모습">
+      <!-- 바닥 -->
+      <line x1="20" y1="128" x2="240" y2="128" stroke="#1E2430" stroke-width="3" stroke-linecap="round"/>
+      <!-- 도둑 (왼쪽, 두 손 위로) -->
+      <g>
+        <path d="M52 30 q-8 10 -4 16 M92 30 q8 10 4 16" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <circle cx="72" cy="52" r="16" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
+        <path d="M57 48 q1 -13 15 -13 q14 0 15 13 z" fill="#E8481C" stroke="#1E2430" stroke-width="2.5"/>
+        <rect x="60" y="50" width="24" height="8" rx="4" fill="#1E2430"/>
+        <circle cx="67" cy="54" r="2.2" fill="#fff"/><circle cx="77" cy="54" r="2.2" fill="#fff"/>
+        <path d="M66 62 q6 -3 12 0" fill="none" stroke="#1E2430" stroke-width="2" stroke-linecap="round"/><!-- 시무룩 -->
+        <rect x="58" y="68" width="28" height="34" rx="10" fill="#fff" stroke="#1E2430" stroke-width="3"/>
+        <path d="M58 77 h28 M58 86 h28 M58 95 h28" stroke="#1E2430" stroke-width="4.5"/>
+        <path d="M64 102 v24 M80 102 v24" stroke="#1E2430" stroke-width="6" stroke-linecap="round"/>
+        <!-- 수갑 연결 -->
+        <path d="M94 46 q22 8 34 28" stroke="#5B6470" stroke-width="3.5" stroke-dasharray="2 5" fill="none"/>
+      </g>
+      <!-- 떨어진 자루 -->
+      <path d="M18 112 q16 -10 26 4 q4 10 -8 12 q-18 2 -18 -16" fill="#C9A15A" stroke="#8a6d3b" stroke-width="2.5"/>
+      <text x="31" y="124" font-size="11" text-anchor="middle">❄️</text>
+      <!-- 탐정 (오른쪽) -->
+      <g>
+        <circle cx="176" cy="56" r="16" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
+        <path d="M156 46 h40 l-6 -8 h-28 z" fill="#5B4632" stroke="#1E2430" stroke-width="2.5"/>
+        <rect x="158" y="38" width="36" height="5" fill="#1E2430" opacity="0"/>
+        <path d="M160 46 h32" stroke="#1E2430" stroke-width="3"/>
+        <circle cx="170" cy="56" r="2.2" fill="#1E2430"/><circle cx="182" cy="56" r="2.2" fill="#1E2430"/>
+        <path d="M169 65 q7 4 14 0" fill="none" stroke="#1E2430" stroke-width="2.2" stroke-linecap="round"/><!-- 미소 -->
+        <path d="M162 74 h28 l6 34 h-40 z" fill="#8B6F47" stroke="#1E2430" stroke-width="3"/>
+        <path d="M176 74 v34" stroke="#1E2430" stroke-width="2"/>
+        <!-- 팔 : 수갑 잡음 / 돋보기 -->
+        <path d="M164 80 q-20 -2 -34 -8" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <path d="M188 80 q16 4 20 -6" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <circle cx="214" cy="66" r="9" fill="none" stroke="#1D8FCB" stroke-width="3.5"/>
+        <path d="M220 73 l8 9" stroke="#1D8FCB" stroke-width="4" stroke-linecap="round"/>
+        <path d="M168 108 v18 M184 108 v18" stroke="#1E2430" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <!-- CASE CLOSED 도장 -->
+      <g transform="rotate(-10 130 22)">
+        <rect x="96" y="10" width="68" height="22" rx="4" fill="none" stroke="#1D8FCB" stroke-width="2.5"/>
+        <text x="130" y="26" font-size="12" text-anchor="middle" fill="#1D8FCB" font-family="Black Han Sans" letter-spacing="1">CASE CLOSED</text>
+      </g>
+    </svg>
+    <div class="capture-box">
+      <p class="cap">📸 <b>지금 이 화면을 캡처하세요!</b><br>캡처 화면을 <b>1층 데스크</b>에 보여주면<br>전리품 보물상자를 열 수 있습니다.</p>
+      <div class="code-line">
+        <span class="lbl">검거 확인 코드</span>
+        <div class="code" id="clearCode">COOL-0000</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 층 시트 -->
+<div id="sheetVeil" onclick="if(event.target===this)closeSheet()"><div id="sheet"></div></div>
+<!-- 결과 모달 -->
+<div id="veil" onclick="if(event.target===this)closeModal()"><div id="modal"></div></div>
+<!-- 카메라 스캐너 -->
+<div id="cam">
+  <video id="camVideo" playsinline muted></video>
+  <div id="camFrame"></div>
+  <p id="camMsg">단서 스티커의 QR을 네모 안에 맞춰주세요</p>
+  <button id="camClose" onclick="closeScanner()">✕</button>
+</div>
+<div id="toast"></div>
+
+<script>
+/* =====================================================
+   여름 도둑을 잡아라 — 참가자용 (실전 QR 버전)
+   · 각 QR 스티커 = 배포 URL + ?c=코드  (예: ...?c=k3x9)
+     → 카메라 스캔 또는 QR 링크 접속 모두 자동 판정
+   · 1층부터 순차 해금 (보물을 찾아야 다음 층 오픈)
+   · 데모용 단서 버튼은 배포 시 SHOW_DEMO=false 로 숨김
+   · 토/일 보물 교체 : gem 값을 요일 분기로 변경
+===================================================== */
+const SHOW_DEMO = true;   // 실제 행사 배포 시 false
+
+const FLOORS = [
+ { no:1, name:"어울림터", zone:"북카페 · 다목적홀",
+   memo:"드디어 왔군, 탐정. 첫 단서는 쉽게 주지. 나는 향기로운 것들 곁에서 쉬다 갔다. 🌸",
+   gem:"k3x9",
+   qrs:[
+     {c:"k3x9", icon:"💎", t:"gem", msg:"벌써 찾았다고? 초심자의 행운이겠지. 2층이 열렸다. 올라와 봐."},
+     {c:"m7q2", icon:"📖", t:"quote", h:"나 보기가 역겨워 가실 때에는 말없이 고이 보내 드리우리다 — 김소월, 「진달래꽃」", msg:"…이별 시나 읽고 있을 때가 아닐 텐데?"},
+     {c:"r4w8", icon:"💡", t:"tip", h:"1층 다목적홀은 전시·행사 공간으로 활용됩니다.", msg:"지금 이 보물찾기도 여기서 태어났지."},
+     {c:"t6p1", icon:"🗒", t:"note", h:"", msg:"데스크에 물어봐도 소용없어. 직원분들도 내가 어디 있는지 몰라 ㅋ"},
+     {c:"z2n5", icon:"🏃", t:"act", h:"손부채질 5번 하고 출발!", msg:"여기까지 오느라 더웠지? 준비운동이다."},
+   ]},
+ { no:2, name:"도서관", zone:"사람도서관 · 열람실 🤫",
+   memo:"쉿. 이 층에선 조용히 움직여. 나는 '사람이 책이 되는 곳'이 신기해서 구경하다 갔다.",
+   gem:"b8f3",
+   qrs:[
+     {c:"h5j7", icon:"📖", t:"quote", h:"죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를 — 윤동주, 「서시」", msg:"…나도 시원함을 훔친 게 좀 부끄럽긴 해."},
+     {c:"b8f3", icon:"💎", t:"gem", msg:"조용히 잘 찾아냈군. 사서보다 낫네. 3층이 열렸다."},
+     {c:"w2d9", icon:"💡", t:"tip", h:"디지털열람실에서는 전자자료를 이용할 수 있습니다.", msg:"도둑 잡다가 지치면 여기서 쉬어가."},
+     {c:"p4s6", icon:"🗒", t:"note", h:"", msg:"열람실에서 공부하는 사람들 방해하면 못써. 나는 매너 있는 도둑이거든."},
+     {c:"g1v8", icon:"📖", t:"quote", h:"님은 갔지마는 나는 님을 보내지 아니하였습니다 — 한용운, 「님의 침묵」", msg:"시원함은 갔지만… 네가 되찾으면 되지."},
+   ]},
+ { no:3, name:"지식놀이터", zone:"스터디카페 · 컨셉형 열람실",
+   memo:"칠월의 나는 잘 익은 과일 같은 존재지. 여름이 열리는 서가에서 나를 찾아봐. 🍇",
+   gem:"q9m4",
+   qrs:[
+     {c:"x3c7", icon:"📖", t:"quote", h:"내 고장 칠월은 청포도가 익어가는 시절 — 이육사, 「청포도」", msg:"힌트는 줬는데 여긴 아니야 ㅋ"},
+     {c:"n6t2", icon:"📖", t:"quote", h:"넓은 벌 동쪽 끝으로 옛이야기 지줄대는 실개천이 휘돌아 나가고 — 정지용, 「향수」", msg:"시원한 실개천… 부럽다."},
+     {c:"q9m4", icon:"💎", t:"gem", msg:"청포도 힌트를 알아듣다니, 책 좀 읽는 타입이군. 4층이 열렸다."},
+     {c:"d7k1", icon:"💡", t:"tip", h:"그룹룸은 모임·스터디 공간입니다.", msg:"친구들이랑 나를 잡을 작전 회의하기 딱 좋지."},
+     {c:"f2r5", icon:"🏃", t:"act", h:"목 스트레칭 좌우 3번.", msg:"공부하던 사람처럼 자연스럽게."},
+   ]},
+ { no:4, name:"창의놀이터", zone:"북캠핑존 · 만화 · 미디어",
+   memo:"이 건물에서 제일 마음에 든 곳. 텐트 안은 생각보다 시원하더라고. ⛺",
+   gem:"j5w9",
+   qrs:[
+     {c:"s8b4", icon:"🎨", t:"note", h:"(만화 컷 스타일 낙서)", msg:"주인공은 항상 4층에서 각성하지. …근데 난 여기 없음 ㅅㄱ"},
+     {c:"j5w9", icon:"💎", t:"gem", msg:"내 아지트를 찾아내다니! 여기 만화책 맛집인 거 알지? 5층이 열렸다."},
+     {c:"v1n7", icon:"💡", t:"tip", h:"미디어스튜디오에서 촬영·크리에이터 활동이 가능합니다.", msg:"나를 잡는 순간을 브이로그로 남겨보든가."},
+     {c:"c6g3", icon:"🗒", t:"note", h:"", msg:"동아리실에서 '여름도둑 팬클럽' 만들 사람 구함. …없겠지."},
+     {c:"y4h8", icon:"🏃", t:"act", h:"가장 좋아하는 만화 주인공 포즈 3초 유지.", msg:"아무도 안 보는 거 확인하고."},
+   ]},
+ { no:5, name:"건강배움터", zone:"헬스장 · 필라테스 · 힐링정원",
+   memo:"여기부터는 체력전이다. 나는 운동을 마치고 초록빛 속에서 땀을 식혔지. 🌿",
+   gem:"u2e6",
+   qrs:[
+     {c:"l9a3", icon:"💪", t:"note", h:"도둑의 운동일지 Day 1", msg:"시원함을 지키려면 체력이 필요하다. 오늘 스쿼트 100개. 내일 못 일어날 듯."},
+     {c:"o5i8", icon:"💡", t:"tip", h:"경산시 거주자·경산 소재 학교 재학생은 체육시설 할인 혜택이 있습니다.", msg:"도둑인 나도 이건 인정."},
+     {c:"u2e6", icon:"💎", t:"gem", msg:"정원까지 쫓아오다니, 끈질기네. 6층이 열렸다. 슬슬 무서워지려 해."},
+     {c:"e7y1", icon:"🏆", t:"quote", h:"나는 선수 생활 동안 9,000개 이상의 슛을 놓쳤다 — 마이클 조던", msg:"실패해도 계속 찍어봐. 보물은 어딘가에 있으니."},
+     {c:"a3o9", icon:"🏃", t:"act", h:"제자리 스쿼트 3개.", msg:"나처럼 100개는 하지 말고."},
+   ]},
+ { no:6, name:"청년놀이터", zone:"U-SPORTS ZONE",
+   memo:"홈런타자가 되는 곳으로 오게! 나는 거기서 3연속 헛스윙하고 도망쳤다. ⚾",
+   gem:"i8p2",
+   qrs:[
+     {c:"i8p2", icon:"💎", t:"gem", msg:"헛스윙의 아픔이 남은 곳을 찾아냈군… 잔인한 녀석. 7층, 마지막이다."},
+     {c:"r6u4", icon:"💪", t:"note", h:"도둑의 운동일지 Day 2", msg:"스크린야구 도전. 타율 0할. 시원함을 훔치는 재능과 야구 재능은 별개인 듯."},
+     {c:"k1z7", icon:"💡", t:"tip", h:"U-SPORTS ZONE에서는 실내에서 ICT 스포츠를 즐길 수 있습니다.", msg:"이 더위에 실내 스포츠 — 이게 진짜 피서지."},
+     {c:"m4x6", icon:"🏆", t:"quote", h:"삼진을 두려워하다가는 아무것도 할 수 없다 — 베이브 루스", msg:"나도 두려움 없이 시원함을 훔쳤지. …미안."},
+     {c:"t9q3", icon:"🏃", t:"act", h:"풀스윙 자세 1회.", msg:"방망이는 상상으로."},
+   ]},
+ { no:7, name:"다목적 체육관", zone:"최종 결전",
+   memo:"여기까지 온 건 네가 처음이다. 가장 넓고, 함성이 울리는 곳. 거기서 기다리지.",
+   gem:"w7l5",
+   qrs:[
+     {c:"z5f9", icon:"💪", t:"note", h:"도둑의 운동일지 — 최종화", msg:"도망 다니느라 하루 계단 왕복 20번. 이 건물, 나를 건강하게 만들었다."},
+     {c:"w7l5", icon:"💎", t:"gem", msg:"잡혔다… 완패다. 훔친 시원함, 전부 돌려주지. 1층 데스크로 가서 전리품을 받아 가!"},
+     {c:"b3j6", icon:"💡", t:"tip", h:"7층 다목적체육관은 체육시설이자 가변형 문화공연 공간으로도 활용됩니다.", msg:"다음엔 공연 보러 와."},
+     {c:"n8d2", icon:"🏆", t:"quote", h:"고통 없이는 얻는 것도 없다 (No pain, no gain)", msg:"7층까지 계단으로 왔다면 인정. 엘리베이터 탔어도 인정."},
+     {c:"h2s4", icon:"🏃", t:"act", h:"만세 3번!", msg:"곧 우승자가 될 테니 미리 연습."},
+   ]},
+];
+
+const TEMPS = [39.9, 37.3, 34.8, 32.2, 29.7, 27.1, 24.6, 22.0];
+const state = { found:new Set(), scanned:new Set(), unlocked:1 };
+let openFloorNo = null;
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('game').style.display='flex';
+  renderFloors();
+}
+
+/* ---------- 층 목록 : 순차 해금 ---------- */
+function renderFloors(){
+  const wrap = document.getElementById('floors');
+  wrap.innerHTML = [...FLOORS].reverse().map(f=>{
+    const done = state.found.has(f.no);
+    const locked = f.no > state.unlocked;
+    const current = f.no === state.unlocked && !done;
+    return `
+    <button class="floor ${done?'done':''} ${locked?'locked':''} ${current?'current':''}" onclick="tryOpen(${f.no})">
+      <span class="fnum">${f.no}F</span>
+      <span><span class="fname">${f.name}</span><br><span class="fzone">${locked?'???':f.zone}</span></span>
+      <span class="fstate">${done?'❄️':(locked?'🔒':'🔥')}</span>
+    </button>`;
+  }).join('');
+}
+function tryOpen(no){
+  if(no > state.unlocked){
+    toast(`🔒 아직 잠겨 있다 — 먼저 ${state.unlocked}층의 보물을 찾아라!`);
+    return;
+  }
+  openSheet(no);
+}
+
+/* ---------- 층 시트 ---------- */
+function openSheet(no){
+  openFloorNo = no;
+  const f = FLOORS.find(x=>x.no===no);
+  const done = state.found.has(no);
+  document.getElementById('sheet').innerHTML = `
+    <div class="s-head">
+      <span class="fnum">${f.no}F</span>
+      <span><span class="s-title">${f.name}</span><br><span class="s-zone">${f.zone}</span></span>
+      <button class="close" onclick="closeSheet()">✕</button>
+    </div>
+    <div class="memo"><span class="who">— 여름 도둑이 남긴 메모</span>${f.memo}</div>
+    <button class="scanBtn" onclick="openScanner()">📷 단서 QR 스캔</button>
+    ${SHOW_DEMO ? `
+    <div class="qr-note">데모 — 실제로는 층에 붙은 스티커를 위 버튼으로 스캔합니다</div>
+    <div class="qr-grid">
+      ${f.qrs.map((q,i)=>{
+        const scanned = state.scanned.has(q.c);
+        const isGem = scanned && q.t==='gem';
+        return `<button class="qr ${scanned?(isGem?'gem':'scanned'):''}" onclick="scan('${q.c}')"><b>${scanned?(isGem?'💎':'·'):'단서'}</b>${i+1}</button>`;
+      }).join('')}
+    </div>` : ''}
+  `;
+  document.getElementById('sheetVeil').classList.add('show');
+}
+function closeSheet(){
+  document.getElementById('sheetVeil').classList.remove('show');
+  openFloorNo = null;
+}
+
+/* ---------- 판정 ---------- */
+function scan(code){
+  let floor=null, qr=null;
+  for(const f of FLOORS){ const q=f.qrs.find(q=>q.c===code); if(q){floor=f; qr=q; break;} }
+  if(!qr){ toast("🤔 이 사건과 관련 없는 QR인 것 같다…"); return; }
+  if(floor.no > state.unlocked){
+    toast(`🕶 "순서를 지켜, 탐정. 지금은 ${state.unlocked}층 차례다."`);
+    return;
+  }
+  state.scanned.add(code);
+
+  if(qr.t==='gem'){
+    const isNew = !state.found.has(floor.no);
+    if(isNew){
+      state.found.add(floor.no);
+      state.unlocked = Math.max(state.unlocked, floor.no+1);
+      updateTemp();
+    }
+    showModal(`
+      <div class="icon">💎</div>
+      <h2>보물 발견! — ${floor.no}층 클리어</h2>
+      <div class="drop">−2.5°<small>시원함의 조각을 되찾았다</small></div>
+      <div class="thief">${qr.msg}</div>
+      <button class="btn" onclick="closeModal()">${state.found.size>=7?'검거 완료 보고 →':'다음 층으로'}</button>
+    `);
+    if(state.found.size>=7) setTimeout(showClear, 900);
+  } else {
+    const titles = {quote:'단서 — 지식의 조각', note:'단서 — 도둑의 흔적', tip:'단서 — 이 건물의 비밀', act:'단서 — 긴급 미션'};
+    showModal(`
+      <div class="icon">${qr.icon}</div>
+      <h2>${titles[qr.t]||'단서'}</h2>
+      ${qr.h?`<div class="quote">${qr.h}</div>`:''}
+      <div class="thief">${qr.msg}</div>
+      <button class="btn" onclick="closeModal()">계속 추리한다</button>
+    `);
+  }
+  renderFloors();
+  if(openFloorNo===floor.no) openSheet(floor.no);
+}
+
+/* ---------- 카메라 QR 스캐너 ---------- */
+let camStream=null, scanning=false, detector=null;
+async function openScanner(){
+  const cam = document.getElementById('cam');
+  const video = document.getElementById('camVideo');
+  const msg = document.getElementById('camMsg');
+  cam.classList.add('show');
+  msg.textContent = '카메라 준비 중…';
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' }, audio:false });
+    video.srcObject = camStream;
+    await video.play();
+    msg.textContent = '단서 스티커의 QR을 네모 안에 맞춰주세요';
+    scanning = true;
+    if('BarcodeDetector' in window){
+      try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
+    }
+    if(!detector){ await ensureJsQR(); }
+    scanLoop();
+  }catch(e){
+    msg.textContent = '카메라를 열 수 없어요 — 브라우저의 카메라 권한을 허용해주세요';
+  }
+}
+function ensureJsQR(){
+  return new Promise((res)=>{
+    if(window.jsQR) return res();
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
+    s.onload=res; s.onerror=res;
+    document.head.appendChild(s);
+  });
+}
+let lastDetect = 0;
+async function scanLoop(){
+  if(!scanning) return;
+  const video = document.getElementById('camVideo');
+  const now = performance.now();
+  if(now - lastDetect > 250 && video.readyState >= 2){
+    lastDetect = now;
+    let raw = null;
+    try{
+      if(detector){
+        const codes = await detector.detect(video);
+        if(codes.length) raw = codes[0].rawValue;
+      } else if(window.jsQR){
+        const cv = scanLoop._cv || (scanLoop._cv = document.createElement('canvas'));
+        const w = 480, h = Math.round(480*video.videoHeight/video.videoWidth)||480;
+        cv.width=w; cv.height=h;
+        const ctx = cv.getContext('2d', {willReadFrequently:true});
+        ctx.drawImage(video, 0, 0, w, h);
+        const d = ctx.getImageData(0,0,w,h);
+        const r = window.jsQR(d.data, w, h, {inversionAttempts:'dontInvert'});
+        if(r) raw = r.data;
+      }
+    }catch(e){}
+    if(raw){
+      const code = extractCode(raw);
+      closeScanner();
+      if(code) scan(code);
+      else toast("🤔 이 사건과 관련 없는 QR인 것 같다…");
+      return;
+    }
+  }
+  requestAnimationFrame(scanLoop);
+}
+function extractCode(raw){
+  try{
+    const u = new URL(raw);
+    const c = u.searchParams.get('c');
+    if(c) return c.toLowerCase();
+  }catch(e){}
+  if(/^[a-z0-9]{3,8}$/i.test(raw.trim())) return raw.trim().toLowerCase();
+  return null;
+}
+function closeScanner(){
+  scanning=false;
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  document.getElementById('camVideo').srcObject=null;
+  document.getElementById('cam').classList.remove('show');
+}
+
+/* ---------- 토스트 ---------- */
+let toastTimer=null;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---------- 온도/배경 ---------- */
+function updateTemp(){
+  const n = state.found.size;
+  document.getElementById('tempNow').innerHTML = TEMPS[n].toFixed(1)+'<small>°C</small>';
+  document.querySelector('#found b').textContent = n;
+  document.getElementById('barFill').style.width = (n/7*100)+'%';
+  const p = n/7;
+  document.documentElement.style.setProperty('--bg-h', 24+(204-24)*p);
+  document.documentElement.style.setProperty('--bg-l', (96-4*p)+'%');
+  document.documentElement.style.setProperty('--accent', p<1?mix('#E8481C','#1D8FCB',p):'#1D8FCB');
+  if(n>0) snowBurst(Math.min(4+n,10));
+}
+function mix(a,b,t){
+  const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
+  const r=Math.round(((pa>>16)&255)*(1-t)+((pb>>16)&255)*t);
+  const g=Math.round(((pa>>8)&255)*(1-t)+((pb>>8)&255)*t);
+  const bl=Math.round((pa&255)*(1-t)+(pb&255)*t);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+bl).toString(16).slice(1);
+}
+function snowBurst(count){
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div');
+    s.className='snow'; s.textContent=['❄️','✦','·'][i%3];
+    s.style.left=Math.random()*100+'vw';
+    s.style.animationDuration=(2.2+Math.random()*2)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),4600);
+  }
+}
+
+/* ---------- 모달 / 클리어 ---------- */
+function showModal(html){
+  document.getElementById('modal').innerHTML=html;
+  document.getElementById('veil').classList.add('show');
+}
+function closeModal(){ document.getElementById('veil').classList.remove('show'); }
+function showClear(){
+  closeModal(); closeSheet();
+  document.getElementById('game').style.display='none';
+  document.getElementById('clear').style.display='flex';
+  document.getElementById('clearCode').textContent='COOL-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  snowBurst(16);
+}
+
+/* ---------- QR 링크 직접 접속(?c=코드) 자동 판정 ---------- */
+const urlCode = new URLSearchParams(location.search).get('c');
+if(urlCode){ startGame(); setTimeout(()=>scan(urlCode.toLowerCase()), 300); }
+</script>
+</body>
+</html>
