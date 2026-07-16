@@ -402,7 +402,7 @@
    · 데모용 단서 버튼은 배포 시 SHOW_DEMO=false 로 숨김
    · 토/일 보물 교체 : gem 값을 요일 분기로 변경
 ===================================================== */
-const SHOW_DEMO = true;   // 실제 행사 배포 시 false
+const SHOW_DEMO = false;  // 실전 버전 — 데모 단서 버튼 숨김 (테스트하려면 true)
 
 const FLOORS = [
  { no:1, name:"어울림터", zone:"북카페 · 다목적홀",
@@ -589,15 +589,16 @@ async function openScanner(){
   cam.classList.add('show');
   msg.textContent = '카메라 준비 중…';
   try{
-    camStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' }, audio:false });
+    camStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment', width:{ideal:1280}, height:{ideal:720} }, audio:false });
     video.srcObject = camStream;
     await video.play();
     msg.textContent = '단서 스티커의 QR을 네모 안에 맞춰주세요';
     scanning = true;
-    if('BarcodeDetector' in window){
+    await ensureJsQR();                 /* 검증된 jsQR을 항상 사용 */
+    if(!window.jsQR && 'BarcodeDetector' in window){
       try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
     }
-    if(!detector){ await ensureJsQR(); }
+    scanStartedAt = performance.now();
     scanLoop();
   }catch(e){
     msg.textContent = '카메라를 열 수 없어요 — 브라우저의 카메라 권한을 허용해주세요';
@@ -612,27 +613,30 @@ function ensureJsQR(){
     document.head.appendChild(s);
   });
 }
-let lastDetect = 0;
+let lastDetect = 0, scanStartedAt = 0;
 async function scanLoop(){
   if(!scanning) return;
   const video = document.getElementById('camVideo');
   const now = performance.now();
-  if(now - lastDetect > 250 && video.readyState >= 2){
+  if(scanStartedAt && now - scanStartedAt > 6000){
+    document.getElementById('camMsg').textContent = '인식이 안 되면 QR에 조금 더 가까이 — 화면 속 QR이라면 화면 밝기를 높여보세요';
+  }
+  if(now - lastDetect > 200 && video.readyState >= 2 && video.videoWidth > 0){
     lastDetect = now;
     let raw = null;
     try{
-      if(detector){
-        const codes = await detector.detect(video);
-        if(codes.length) raw = codes[0].rawValue;
-      } else if(window.jsQR){
+      if(window.jsQR){
         const cv = scanLoop._cv || (scanLoop._cv = document.createElement('canvas'));
-        const w = 480, h = Math.round(480*video.videoHeight/video.videoWidth)||480;
+        const w = 640, h = Math.round(640*video.videoHeight/video.videoWidth)||640;
         cv.width=w; cv.height=h;
         const ctx = cv.getContext('2d', {willReadFrequently:true});
         ctx.drawImage(video, 0, 0, w, h);
         const d = ctx.getImageData(0,0,w,h);
-        const r = window.jsQR(d.data, w, h, {inversionAttempts:'dontInvert'});
-        if(r) raw = r.data;
+        const r = window.jsQR(d.data, w, h, {inversionAttempts:'attemptBoth'});
+        if(r && r.data) raw = r.data;
+      } else if(detector){
+        const codes = await detector.detect(video);
+        if(codes.length) raw = codes[0].rawValue;
       }
     }catch(e){}
     if(raw){
