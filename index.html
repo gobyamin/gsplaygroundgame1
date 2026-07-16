@@ -390,6 +390,7 @@
   <div id="camFrame"></div>
   <p id="camMsg">단서 스티커의 QR을 네모 안에 맞춰주세요</p>
   <button id="camClose" onclick="closeScanner()">✕</button>
+  <div id="camStat" style="position:absolute; left:12px; top:calc(14px + env(safe-area-inset-top)); font-size:.62rem; color:#9fd8ff; background:rgba(0,0,0,.45); padding:4px 9px; border-radius:8px; line-height:1.5">SCAN v4</div>
 </div>
 <div id="toast"></div>
 
@@ -598,6 +599,12 @@ async function openScanner(){
     if('BarcodeDetector' in window){
       try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
     }
+    document.getElementById('camStat').textContent =
+      'SCAN v4 · jsQR ' + (window.jsQR ? 'OK' : 'X') + ' · 내장 ' + (detector ? 'OK' : 'X');
+    if(!window.jsQR && !detector){
+      msg.innerHTML = '⚠ 인식 엔진을 불러오지 못했어요 (네트워크 확인 후 다시 열어주세요)<br>이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍으면 똑같이 작동합니다';
+      return;
+    }
     scanStartedAt = performance.now();
     tick = 0;
     scanLoop();
@@ -612,6 +619,7 @@ function ensureJsQR(){
     s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
     s.onload=res; s.onerror=res;
     document.head.appendChild(s);
+    setTimeout(res, 5000);   /* 5초 안에 못 받으면 진행 (아래에서 안내) */
   });
 }
 let lastDetect = 0, scanStartedAt = 0, tick = 0;
@@ -624,6 +632,10 @@ async function scanLoop(){
   }
   if(now - lastDetect > 180 && video.readyState >= 2 && video.videoWidth > 0){
     lastDetect = now; tick++;
+    if(tick % 5 === 0){
+      const st = document.getElementById('camStat');
+      st.textContent = st.textContent.split(' · 판독')[0] + ' · 판독 ' + tick + '회';
+    }
     let raw = null;
     try{
       /* 1차: 기기 내장 인식기 (지원 기기에서 가장 강력) */
