@@ -130,15 +130,18 @@
   footer{font-size:.56rem; color:#999; text-align:center; padding:4px 16px 7px; line-height:1.5; flex-shrink:0}
 
   /* ================= 층 시트 ================= */
-  #sheetVeil{position:fixed; inset:0; background:rgba(20,24,34,.5); z-index:90; display:none; align-items:flex-end; justify-content:center}
-  #sheetVeil.show{display:flex}
+  #sheetVeil{position:fixed; inset:0; background:rgba(20,24,34,.5); z-index:90; display:flex;
+    align-items:flex-end; justify-content:center;
+    opacity:0; visibility:hidden; transition:opacity .28s ease, visibility .28s}
+  #sheetVeil.show{opacity:1; visibility:visible}
+  #sheetVeil.show #sheet{transform:none}
   #sheet{
     width:100%; max-width:430px; background:#fff;
     border:3px solid var(--ink); border-bottom:none; border-radius:20px 20px 0 0;
     padding:15px 17px calc(14px + env(safe-area-inset-bottom));
-    animation:up .3s cubic-bezier(.2,1,.4,1); max-height:80dvh; overflow-y:auto;
+    max-height:80dvh; overflow-y:auto;
+    transform:translateY(30%); transition:transform .34s cubic-bezier(.2,.9,.3,1);
   }
-  @keyframes up{from{transform:translateY(60%)}}
   #sheet .s-head{display:flex; align-items:center; gap:10px; margin-bottom:2px}
   #sheet .s-head .fnum{width:38px; height:38px; font-size:.95rem; background:var(--accent); color:#fff; border-color:var(--accent)}
   #sheet .s-title{font-size:.98rem; font-weight:bold}
@@ -159,6 +162,20 @@
     box-shadow:0 4px 0 rgba(0,0,0,.25);
   }
   .scanBtn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .slot-head{display:flex; justify-content:space-between; align-items:baseline; font-size:.7rem; color:#888; margin:2px 1px 6px}
+  .slot-head b{color:var(--accent); font-family:'Black Han Sans'; font-size:.82rem; transition:color 1.2s}
+  .slots{display:flex; gap:6px; margin-bottom:4px}
+  .slot{
+    flex:1; border-radius:10px; padding:8px 0 7px; text-align:center;
+    font-family:inherit; line-height:1.25; transition:background .3s, border-color .3s, opacity .3s;
+  }
+  .slot .s-ic{display:block; font-size:1.05rem; margin-bottom:2px}
+  .slot b{display:block; font-size:.64rem}
+  .slot .s-sub{display:block; font-size:.55rem; margin-top:1px; opacity:.85}
+  .slot.todo{border:2px dashed #CFC8BB; background:#FAF8F4; color:#A9A091}
+  .slot.seen{border:2px solid #DDDDDD; background:#F1F1F1; color:#777; cursor:pointer}
+  .slot.gem{border:2px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer}
+  .slot:disabled{cursor:default}
   .qr-note{font-size:.66rem; color:#888; margin-bottom:6px}
   .qr-grid{display:flex; gap:6px}
   .qr{
@@ -172,8 +189,17 @@
   .qr.gem{background:var(--accent); color:#fff; border-color:var(--accent)}
 
   /* ================= 카메라 스캐너 ================= */
-  #cam{position:fixed; inset:0; z-index:120; background:#000; display:none; flex-direction:column}
-  #cam.show{display:flex}
+  #cam{position:fixed; inset:0; z-index:120; background:#000; display:flex; flex-direction:column;
+    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s}
+  #cam.show{opacity:1; visibility:visible}
+  #camHit{
+    position:absolute; left:50%; top:44%; transform:translate(-50%,-50%) scale(.55);
+    width:86px; height:86px; border-radius:50%; background:#2FBF71; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:2.5rem; z-index:5;
+    opacity:0; transition:transform .28s cubic-bezier(.2,1.5,.4,1), opacity .2s;
+    box-shadow:0 0 40px rgba(47,191,113,.6);
+  }
+  #camHit.show{opacity:1; transform:translate(-50%,-50%) scale(1)}
   #cam video{flex:1; width:100%; object-fit:cover}
   #camFrame{
     position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
@@ -200,14 +226,20 @@
   #toast.show{opacity:1}
 
   /* ================= 결과 모달 ================= */
-  #veil{position:fixed; inset:0; background:rgba(20,24,34,.55); z-index:100; display:none; align-items:center; justify-content:center; padding:20px}
-  #veil.show{display:flex}
+  #veil{position:fixed; inset:0; background:rgba(20,24,34,.55); z-index:100; display:flex;
+    align-items:center; justify-content:center; padding:20px;
+    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s}
+  #veil.show{opacity:1; visibility:visible}
   #modal{
     width:100%; max-width:360px; background:#fff; border:3px solid var(--ink);
     border-radius:18px; padding:19px 17px; text-align:center;
-    animation:pop .28s cubic-bezier(.2,1.4,.4,1); max-height:80dvh; overflow-y:auto;
+    max-height:80dvh; overflow-y:auto;
+    transform:translateY(18px) scale(.96); opacity:0;
+    transition:transform .34s cubic-bezier(.2,.9,.3,1.15), opacity .26s ease;
   }
-  @keyframes pop{from{transform:scale(.8); opacity:0}}
+  #veil.show #modal{transform:none; opacity:1}
+  .again{display:inline-block; font-size:.66rem; color:#888; background:#eee;
+    padding:3px 11px; border-radius:99px; margin-bottom:6px}
   #modal .icon{font-size:2.2rem; margin-bottom:4px}
   #modal h2{font-family:'Black Han Sans'; font-size:1.15rem; margin-bottom:8px}
   #modal .quote{
@@ -251,6 +283,7 @@
   <section id="intro">
     <div class="paper">
       <span class="extra">호외</span>
+      <span style="position:absolute; bottom:6px; right:10px; font-size:.6rem; color:#B8AE9C; font-family:'Gowun Dodum'">빌드 v7 · 엔진 내장</span>
       <div class="masthead">
         <span class="name">경청일보</span>
         <span class="date">2026년 8월</span>
@@ -389,8 +422,9 @@
   <video id="camVideo" playsinline muted></video>
   <div id="camFrame"></div>
   <p id="camMsg">단서 스티커의 QR을 네모 안에 맞춰주세요</p>
+  <div id="camHit">✓</div>
   <button id="camClose" onclick="closeScanner()">✕</button>
-  <div id="camStat" style="position:absolute; left:12px; top:calc(14px + env(safe-area-inset-top)); font-size:.62rem; color:#9fd8ff; background:rgba(0,0,0,.45); padding:4px 9px; border-radius:8px; line-height:1.5">SCAN v5</div>
+  <div id="camStat" style="position:absolute; left:12px; top:calc(14px + env(safe-area-inset-top)); font-size:.62rem; color:#9fd8ff; background:rgba(0,0,0,.45); padding:4px 9px; border-radius:8px; line-height:1.5">SCAN v7</div>
 </div>
 <div id="toast"></div>
 
@@ -529,15 +563,21 @@ function openSheet(no){
     </div>
     <div class="memo"><span class="who">— 여름 도둑이 남긴 메모</span>${f.memo}</div>
     <button class="scanBtn" onclick="openScanner()">📷 단서 QR 스캔</button>
-    ${SHOW_DEMO ? `
-    <div class="qr-note">데모 — 실제로는 층에 붙은 스티커를 위 버튼으로 스캔합니다</div>
-    <div class="qr-grid">
+    <div class="slot-head"><span>이 층의 단서 5개 — 하나만 진짜 보물</span><b>${f.qrs.filter(q=>state.scanned.has(q.c)).length} / 5 확인</b></div>
+    <div class="slots">
       ${f.qrs.map((q,i)=>{
-        const scanned = state.scanned.has(q.c);
-        const isGem = scanned && q.t==='gem';
-        return `<button class="qr ${scanned?(isGem?'gem':'scanned'):''}" onclick="scan('${q.c}')"><b>${scanned?(isGem?'💎':'·'):'단서'}</b>${i+1}</button>`;
+        const seen = state.scanned.has(q.c);
+        const isGem = q.t==='gem';
+        const cls = seen ? (isGem?'gem':'seen') : 'todo';
+        const clickable = seen || SHOW_DEMO;
+        return `<button class="slot ${cls}" ${clickable?`onclick="scan('${q.c}')"`:'disabled'}>
+          <span class="s-ic">${seen?(isGem?'💎':q.icon):'?'}</span>
+          <b>단서 ${i+1}</b>
+          <span class="s-sub">${seen?(isGem?'보물!':'확인함'):'미발견'}</span>
+        </button>`;
       }).join('')}
-    </div>` : ''}
+    </div>
+    <div class="qr-note">${SHOW_DEMO?'데모 모드 — 미발견 단서도 눌러서 스캔 시뮬레이션 가능':'확인한 단서는 눌러서 다시 볼 수 있어요'}</div>
   `;
   document.getElementById('sheetVeil').classList.add('show');
 }
@@ -555,6 +595,7 @@ function scan(code){
     toast(`🕶 "순서를 지켜, 탐정. 지금은 ${state.unlocked}층 차례다."`);
     return;
   }
+  const already = state.scanned.has(code);
   state.scanned.add(code);
 
   if(qr.t==='gem'){
@@ -565,6 +606,7 @@ function scan(code){
       updateTemp();
     }
     showModal(`
+      ${already?'<div class="again">🔁 이미 찾은 보물</div>':''}
       <div class="icon">💎</div>
       <h2>보물 발견! — ${floor.no}층 클리어</h2>
       <div class="drop">−2.5°<small>시원함의 조각을 되찾았다</small></div>
@@ -575,6 +617,7 @@ function scan(code){
   } else {
     const titles = {quote:'단서 — 지식의 조각', note:'단서 — 도둑의 흔적', tip:'단서 — 이 건물의 비밀', act:'단서 — 긴급 미션'};
     showModal(`
+      ${already?'<div class="again">🔁 이미 확인한 단서</div>':''}
       <div class="icon">${qr.icon}</div>
       <h2>${titles[qr.t]||'단서'}</h2>
       ${qr.h?`<div class="quote">${qr.h}</div>`:''}
@@ -605,7 +648,7 @@ async function openScanner(){
       try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
     }
     document.getElementById('camStat').textContent =
-      'SCAN v5 · jsQR ' + (window.jsQR ? 'OK' : 'X') + ' · 내장 ' + (detector ? 'OK' : 'X');
+      'SCAN v7 · jsQR ' + (window.jsQR ? 'OK' : 'X') + ' · 내장 ' + (detector ? 'OK' : 'X');
     if(!window.jsQR && !detector){
       msg.innerHTML = '⚠ 인식 엔진을 불러오지 못했어요 (네트워크 확인 후 다시 열어주세요)<br>이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍으면 똑같이 작동합니다';
       return;
@@ -674,11 +717,21 @@ async function scanLoop(){
       }
     }catch(e){}
     if(raw){
+      scanning = false;
       const code = extractCode(raw);
-      closeScanner();
-      if(code === '__start__') toast("🕵️ 그건 시작 QR — 이미 수사는 진행 중이다! 층에 숨은 단서 QR을 찾아라.");
-      else if(code) scan(code);
-      else toast("🤔 이 사건과 관련 없는 QR인 것 같다…");
+      const hit = document.getElementById('camHit');
+      hit.textContent = code ? '✓' : '?';
+      hit.classList.add('show');
+      try{ if(navigator.vibrate) navigator.vibrate(60); }catch(e){}
+      setTimeout(()=>{
+        hit.classList.remove('show');
+        closeScanner();
+        setTimeout(()=>{
+          if(code === '__start__') toast("🕵️ 그건 시작 QR — 이미 수사는 진행 중이다! 층에 숨은 단서 QR을 찾아라.");
+          else if(code) scan(code);
+          else toast("🤔 이 사건과 관련 없는 QR인 것 같다…");
+        }, 240);
+      }, 560);
       return;
     }
   }
