@@ -594,11 +594,12 @@ async function openScanner(){
     await video.play();
     msg.textContent = '단서 스티커의 QR을 네모 안에 맞춰주세요';
     scanning = true;
-    await ensureJsQR();                 /* 검증된 jsQR을 항상 사용 */
-    if(!window.jsQR && 'BarcodeDetector' in window){
+    await ensureJsQR();                 /* jsQR + 내장 인식기 병행 */
+    if('BarcodeDetector' in window){
       try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
     }
     scanStartedAt = performance.now();
+    tick = 0;
     scanLoop();
   }catch(e){
     msg.textContent = '카메라를 열 수 없어요 — 브라우저의 카메라 권한을 허용해주세요';
@@ -613,30 +614,46 @@ function ensureJsQR(){
     document.head.appendChild(s);
   });
 }
-let lastDetect = 0, scanStartedAt = 0;
+let lastDetect = 0, scanStartedAt = 0, tick = 0;
 async function scanLoop(){
   if(!scanning) return;
   const video = document.getElementById('camVideo');
   const now = performance.now();
   if(scanStartedAt && now - scanStartedAt > 6000){
-    document.getElementById('camMsg').textContent = '인식이 안 되면 QR에 조금 더 가까이 — 화면 속 QR이라면 화면 밝기를 높여보세요';
+    document.getElementById('camMsg').innerHTML = '인식이 어려우면 QR을 네모에 꽉 차게, 화면 QR이라면 밝기를 최대로!<br>또는 이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍어도 똑같이 작동해요';
   }
-  if(now - lastDetect > 200 && video.readyState >= 2 && video.videoWidth > 0){
-    lastDetect = now;
+  if(now - lastDetect > 180 && video.readyState >= 2 && video.videoWidth > 0){
+    lastDetect = now; tick++;
     let raw = null;
     try{
-      if(window.jsQR){
+      /* 1차: 기기 내장 인식기 (지원 기기에서 가장 강력) */
+      if(detector){
+        try{
+          const codes = await detector.detect(video);
+          if(codes.length) raw = codes[0].rawValue;
+        }catch(e){}
+      }
+      /* 2차: jsQR — 안내 프레임 중앙부를 고해상도로 잘라 판독 */
+      if(!raw && window.jsQR){
         const cv = scanLoop._cv || (scanLoop._cv = document.createElement('canvas'));
-        const w = 640, h = Math.round(640*video.videoHeight/video.videoWidth)||640;
-        cv.width=w; cv.height=h;
         const ctx = cv.getContext('2d', {willReadFrequently:true});
-        ctx.drawImage(video, 0, 0, w, h);
-        const d = ctx.getImageData(0,0,w,h);
+        const vw = video.videoWidth, vh = video.videoHeight;
+        let d, w, h;
+        if(tick % 3 !== 0){
+          /* 중앙 크롭(프레임 영역) → QR이 판독면을 꽉 채움 */
+          const side = Math.floor(Math.min(vw, vh) * 0.74);
+          const sx = (vw - side) / 2, sy = (vh - side) / 2;
+          w = h = 540; cv.width = w; cv.height = h;
+          ctx.drawImage(video, sx, sy, side, side, 0, 0, w, h);
+        } else {
+          /* 3번에 1번은 전체 화면 판독 (프레임 밖 QR 대비) */
+          w = 720; h = Math.round(720 * vh / vw) || 720;
+          cv.width = w; cv.height = h;
+          ctx.drawImage(video, 0, 0, w, h);
+        }
+        d = ctx.getImageData(0, 0, w, h);
         const r = window.jsQR(d.data, w, h, {inversionAttempts:'attemptBoth'});
         if(r && r.data) raw = r.data;
-      } else if(detector){
-        const codes = await detector.detect(video);
-        if(codes.length) raw = codes[0].rawValue;
       }
     }catch(e){}
     if(raw){
