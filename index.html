@@ -3,430 +3,623 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>경청지놀 여름 도둑을 잡아라</title>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<title>여름 도둑을 잡아라 — 경청지놀</title>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1E2430;
-    --heat:#E8481C; --sun:#FFB627; --cool:#1D8FCB; --ice:#DFF3FC;
-    --note:#FFF3B0; --news:#F6F1E5;
-    --bg-h:24; --bg-s:100%; --bg-l:96%;
-    --accent:#E8481C;
+    --ink:#17142A;
+    --hot:#FF4D6D; --tang:#FF8A00; --lemon:#FFD400;
+    --cool:#00A8E8; --mint:#4DE3B8; --paper:#FFFDF5;
+    --accent:#FF4D6D; --frost:0;
+    --bg-h:22; --bg-s:100%; --bg-l:93%;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
-    font-family:'Gowun Dodum',sans-serif; color:var(--ink);
-    background:hsl(var(--bg-h) var(--bg-s) var(--bg-l));
-    transition:background 1.2s ease;
+    font-family:'Noto Sans KR',sans-serif; color:var(--ink);
+    background-color:hsl(var(--bg-h) var(--bg-s) var(--bg-l));
+    background-image:
+      repeating-conic-gradient(rgba(23,20,42,.025) 0 25%, transparent 0 50%);
+    background-size:28px 28px;
+    transition:background-color 1.2s ease;
     display:flex; justify-content:center; overflow:hidden;
   }
   #app{width:100%; max-width:430px; height:100dvh; position:relative; display:flex; flex-direction:column}
-  .display{font-family:'Black Han Sans',sans-serif; font-weight:400; letter-spacing:.01em}
+  .display{font-family:'Bagel Fat One',cursive; font-weight:400; letter-spacing:.01em}
+  .sticker{
+    background:var(--paper); border:3px solid var(--ink); border-radius:18px;
+    box-shadow:0 0 0 3px #fff, 5px 6px 0 3px rgba(23,20,42,.9);
+  }
   .btn{
-    display:block; width:100%; border:none; cursor:pointer;
-    font-family:'Black Han Sans',sans-serif; font-size:1.05rem; color:#fff;
-    background:var(--accent); padding:14px; border-radius:13px;
-    box-shadow:0 4px 0 rgba(0,0,0,.18); transition:transform .08s, background 1.2s;
+    display:block; width:100%; border:3px solid var(--ink); cursor:pointer;
+    font-family:'Bagel Fat One',cursive; font-size:1.1rem; color:var(--ink);
+    background:var(--lemon); padding:13px; border-radius:16px;
+    box-shadow:0 0 0 3px #fff, 4px 5px 0 3px var(--ink);
+    transition:transform .08s;
   }
-  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.18)}
-
-  /* ================= 인트로 : 신문 호외 ================= */
-  #intro{height:100dvh; padding:12px 14px; display:flex; flex-direction:column; gap:10px}
-  .paper{
-    flex:1; min-height:0; background:var(--news); border:2px solid var(--ink);
-    border-radius:6px; padding:12px 14px; position:relative;
-    box-shadow:4px 4px 0 rgba(30,36,48,.18);
-    display:flex; flex-direction:column; font-family:'Gowun Batang',serif;
-    overflow-y:auto;
-  }
-  .masthead{
-    display:flex; align-items:baseline; justify-content:space-between;
-    border-bottom:3px double var(--ink); padding-bottom:6px; flex-shrink:0;
-  }
-  .masthead .name{font-family:'Black Han Sans'; font-size:1.3rem; letter-spacing:.2em}
-  .masthead .date{font-size:.62rem; color:#555}
-  .extra{
-    position:absolute; top:8px; right:-8px; transform:rotate(9deg);
-    font-family:'Black Han Sans'; font-size:.68rem; letter-spacing:.2em;
-    color:#fff; background:var(--heat); padding:3px 12px; box-shadow:2px 2px 0 rgba(0,0,0,.2);
-  }
-  .headline{
-    font-family:'Black Han Sans'; font-size:clamp(1.25rem, 6vw, 1.6rem);
-    line-height:1.28; margin:auto 0 4px; padding-top:10px; flex-shrink:0;
-  }
-  .headline .hot{color:var(--heat)}
-  .article{
-    font-size:clamp(.72rem, 3vw, .8rem); line-height:1.62; color:#333;
-    border-bottom:1.5px solid var(--ink); padding-bottom:8px; flex-shrink:0;
-  }
-  .article b{color:var(--heat)}
-  /* 속보 박스 : 도둑 캐릭터 */
-  .flash-box{
-    margin:12px 0 auto; display:flex; align-items:center; gap:10px; flex-shrink:0;
-    background:#fff; border:2px dashed var(--heat); border-radius:8px; padding:10px 12px;
-  }
-  .flash-box svg{height:clamp(92px, 24dvh, 130px); width:auto; flex-shrink:0}
-  .flash-txt{font-family:'Gowun Dodum'}
-  .flash-txt .bstamp{
-    display:inline-block; font-family:'Black Han Sans'; font-size:.66rem; color:#fff;
-    background:var(--ink); padding:2px 9px; border-radius:3px; letter-spacing:.15em; margin-bottom:5px;
-  }
-  .flash-txt h2{font-family:'Black Han Sans'; font-size:clamp(.98rem,4.4vw,1.15rem); line-height:1.3; margin-bottom:4px}
-  .flash-txt h2 span{color:var(--heat)}
-  .flash-txt p{font-size:clamp(.7rem,3vw,.78rem); line-height:1.55; color:#444}
-  .wanted{
-    margin-top:6px; font-size:.62rem; color:#8a6d00; background:var(--note);
-    display:inline-block; padding:2px 8px; border-radius:4px; transform:rotate(-1deg);
+  .btn:active{transform:translate(3px,4px); box-shadow:0 0 0 3px #fff, 1px 1px 0 3px var(--ink)}
+  .badge{
+    display:inline-block; font-family:'Bagel Fat One',cursive; font-size:.68rem;
+    background:var(--ink); color:#fff; padding:3px 12px; border-radius:99px; letter-spacing:.12em;
   }
 
-  /* ================= 메인 : 건물 ================= */
-  #game{display:none; height:100dvh; flex-direction:column}
+  /* ================= 인트로 : WANTED 포스터 ================= */
+  #intro{height:100dvh; padding:14px 16px calc(14px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:11px}
+  .ticker{
+    flex-shrink:0; overflow:hidden; white-space:nowrap;
+    background:var(--ink); color:var(--lemon); border-radius:99px;
+    font-family:'Bagel Fat One',cursive; font-size:.72rem; padding:6px 0;
+  }
+  .ticker span{display:inline-block; padding-left:100%; animation:tick 14s linear infinite}
+  @keyframes tick{to{transform:translateX(-100%)}}
+  .poster{
+    flex:1; min-height:0; display:flex; flex-direction:column; align-items:center;
+    padding:14px 16px 12px; position:relative; overflow:hidden; text-align:center;
+  }
+  .poster .wanted-arc{
+    font-family:'Bagel Fat One',cursive; font-size:clamp(1.9rem,9vw,2.4rem); line-height:1;
+    color:var(--hot); letter-spacing:.2em; -webkit-text-stroke:1.5px var(--ink);
+    text-shadow:3px 3px 0 var(--lemon);
+  }
+  .poster .sub-arc{font-size:.68rem; letter-spacing:.34em; color:#8b8698; margin-top:2px}
+  .chase{flex:1; min-height:0; display:flex; align-items:center; justify-content:center; margin:2px 0; width:100%}
+  .chase svg{height:clamp(115px,24dvh,180px); width:auto; max-width:100%; overflow:visible; filter:drop-shadow(4px 5px 0 rgba(23,20,42,.15)); transform:scaleX(-1)}
+  .copRun,.thiefRun,.legF,.legK,.beep{transform-box:fill-box}
+  .copRun{animation:bobA .46s ease-in-out infinite}
+  .thiefRun{animation:bobB .46s ease-in-out infinite}
+  @keyframes bobA{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes bobB{0%,100%{transform:translateY(-8px)}50%{transform:translateY(0)}}
+  .legF{animation:kickF .46s ease-in-out infinite; transform-origin:50% 0}
+  .legK{animation:kickK .46s ease-in-out infinite; transform-origin:50% 0}
+  @keyframes kickF{0%,100%{transform:rotate(24deg)}50%{transform:rotate(-24deg)}}
+  @keyframes kickK{0%,100%{transform:rotate(-24deg)}50%{transform:rotate(24deg)}}
+  .beep{animation:beepBlink .92s steps(1) infinite}
+  @keyframes beepBlink{0%,64%{opacity:1}64.1%,100%{opacity:0}}
+  .speed path{stroke-dasharray:26 30; animation:zoomLn .6s linear infinite}
+  @keyframes zoomLn{to{stroke-dashoffset:-56}}
+  .dash{animation:dashFlick .23s steps(2) infinite}
+  @keyframes dashFlick{0%,100%{opacity:.32; transform:translateX(0)}50%{opacity:.14; transform:translateX(3px)}}
+  .wind path{stroke-dasharray:22 34; animation:zoomLn .5s linear infinite}
+  .wind path:nth-child(2){animation-duration:.62s}
+  .wind path:nth-child(3){animation-duration:.44s}
+  .star-badge{
+    position:absolute; font-family:'Bagel Fat One',cursive; color:var(--ink);
+    background:var(--mint); border:2.5px solid var(--ink); border-radius:99px;
+    padding:5px 11px; font-size:.66rem; box-shadow:2px 3px 0 var(--ink); z-index:2;
+  }
+  .sb1{top:54px; left:2px; transform:rotate(-10deg); background:var(--lemon)}
+  .sb2{top:86px; right:0px; transform:rotate(8deg)}
+  .sb3{top:150px; left:0px; transform:rotate(6deg); background:#BFE6FF}
+  .poster h1{font-family:'Bagel Fat One',cursive; font-size:clamp(1.25rem,6vw,1.5rem); line-height:1.3}
+  .poster h1 em{font-style:normal; color:var(--hot)}
+  .poster .story{font-size:clamp(.72rem,3.1vw,.8rem); line-height:1.6; color:#544f66; margin-top:6px; text-wrap:pretty}
+  .poster .story b{color:var(--hot)}
+  .reward{
+    margin-top:9px; font-family:'Gaegu',cursive; font-size:.95rem; color:var(--ink);
+    background:var(--lemon); border:2.5px dashed var(--ink); border-radius:12px;
+    padding:5px 14px; margin-bottom:12px; transform:rotate(-1.2deg);
+  }
+
+  /* ================= 수사관 등록 ================= */
+  #regVeil{
+    position:fixed; inset:0; z-index:110; background:rgba(23,20,42,.6);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; visibility:hidden; transition:opacity .3s, visibility .3s;
+  }
+  #regVeil.show{opacity:1; visibility:visible}
+  #regCard{
+    width:100%; max-width:330px; padding:22px 20px; text-align:center;
+    transform:translateY(18px) scale(.96); opacity:0;
+    transition:transform .34s cubic-bezier(.2,.9,.3,1.15), opacity .26s;
+  }
+  #regVeil.show #regCard{transform:none; opacity:1}
+  .reg-tag{font-family:'Bagel Fat One',cursive; font-size:.62rem; letter-spacing:.18em; color:var(--hot);
+    border:2px solid var(--hot); padding:3px 10px; border-radius:99px; display:inline-block; margin-bottom:9px}
+  #regCard h2{font-family:'Bagel Fat One',cursive; font-size:1.45rem; margin-bottom:4px}
+  .reg-sub{font-size:.74rem; color:#8b8698; margin-bottom:16px; line-height:1.5}
+  .reg-row{
+    display:flex; align-items:baseline; gap:9px; margin-bottom:18px;
+    border-bottom:3px solid var(--ink); padding-bottom:5px;
+  }
+  .reg-prefix{font-family:'Bagel Fat One',cursive; font-size:1.1rem; color:var(--hot); flex-shrink:0}
+  .reg-row input{
+    flex:1; min-width:0; border:none; background:transparent; padding:2px 4px;
+    font-family:'Gaegu',cursive; font-size:1.55rem; color:var(--ink);
+  }
+  .reg-row input:focus{outline:none}
+
+  /* ================= 메인 ================= */
+  #game{display:none; height:100dvh; flex-direction:column; padding:10px 14px 0}
   header#hud{
-    background:hsl(var(--bg-h) var(--bg-s) calc(var(--bg-l) - 4%));
-    border-bottom:2.5px solid var(--ink);
-    padding:9px 16px 8px; transition:background 1.2s; flex-shrink:0;
+    flex-shrink:0; padding:10px 14px 9px; margin-bottom:8px;
+    display:flex; flex-direction:column; gap:6px;
   }
-  #hud .row{display:flex; align-items:flex-end; justify-content:space-between}
-  #tempNow{font-family:'Black Han Sans'; font-size:1.8rem; line-height:1; color:var(--accent); transition:color 1.2s}
-  #tempNow small{font-size:.8rem}
-  #tempLabel{font-size:.64rem; letter-spacing:.1em; color:#666}
-  #found{font-size:.72rem; text-align:right; line-height:1.3}
-  #found b{font-family:'Black Han Sans'; font-size:1.1rem; color:var(--accent); transition:color 1.2s}
-  #bar{height:9px; border:2px solid var(--ink); border-radius:99px; margin-top:6px; overflow:hidden; background:#fff}
+  #hud .row{display:flex; align-items:flex-end; justify-content:space-between; gap:8px}
+  #tempNow{font-family:'Bagel Fat One',cursive; font-size:2rem; line-height:1; color:var(--accent); transition:color 1.2s}
+  #tempNow small{font-size:.85rem}
+  #tempLabel{font-family:'Bagel Fat One',cursive; font-size:.6rem; letter-spacing:.14em; color:#8b8698}
+  #found{font-size:.7rem; text-align:right; line-height:1.35; color:#544f66; margin-left:0}
+  #flake{margin-left:auto; flex-shrink:0}
+  #flake .sf{stroke:#DDD9E4; stroke-width:7; stroke-linecap:round; fill:none; transition:stroke .6s}
+  #flake .sf.ctr{fill:#DDD9E4; stroke:none; transition:fill .6s}
+  #flake .sf.on{stroke:var(--cool)}
+  #flake .sf.ctr.on{fill:var(--cool)}
+  #flake .sf.pop{animation:sfPop .5s cubic-bezier(.2,1.4,.4,1)}
+  #flake .sf{transform-box:fill-box; transform-origin:center}
+  @keyframes sfPop{50%{transform:scale(1.45)}}
+  #found b{font-family:'Bagel Fat One',cursive; font-size:1.15rem; color:var(--accent); transition:color 1.2s}
+  #snd{
+    border:2.5px solid var(--ink); background:#fff; border-radius:12px;
+    width:36px; height:36px; font-size:.9rem; cursor:pointer; align-self:center;
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  #bar{height:11px; border:2.5px solid var(--ink); border-radius:99px; overflow:hidden; background:#fff}
   #barFill{height:100%; width:0%;
-    background:linear-gradient(90deg, var(--heat), var(--sun) 45%, var(--cool));
-    transition:width .9s cubic-bezier(.2,.8,.2,1);}
-
-  main{flex:1; min-height:0; padding:6px 14px 4px; display:flex; flex-direction:column}
-  .hint-line{font-size:.66rem; color:#666; text-align:center; margin-bottom:5px; flex-shrink:0}
-  #floors{flex:1; min-height:0; display:flex; flex-direction:column; gap:5px}
+    background:repeating-linear-gradient(-45deg, var(--accent) 0 8px, color-mix(in oklab, var(--accent) 70%, #fff) 8px 16px);
+    transition:width .9s cubic-bezier(.2,.8,.2,1), background 1.2s;}
+  main{flex:1; min-height:0; display:flex; flex-direction:column}
+  .hint-line{font-family:'Gaegu',cursive; font-size:.88rem; color:#6b6580; text-align:center; margin-bottom:6px; flex-shrink:0}
+  #floors{flex:1; min-height:0; display:flex; flex-direction:column; gap:7px; padding-bottom:4px}
   .floor{
     flex:1; min-height:0;
-    background:#fff; border:2px solid var(--ink); border-radius:11px;
-    box-shadow:3px 3px 0 rgba(30,36,48,.12);
-    display:flex; align-items:center; gap:10px; padding:0 13px;
+    background:var(--paper); border:3px solid var(--ink); border-radius:15px;
+    box-shadow:0 0 0 2.5px #fff, 3px 4px 0 2.5px rgba(23,20,42,.85);
+    display:flex; align-items:center; gap:10px; padding:0 12px;
     cursor:pointer; font-family:inherit; color:inherit; text-align:left; width:100%;
     position:relative;
   }
-  .floor.done{opacity:.88}
-  .floor.locked{background:#F1EEE9; border-color:#BBB; box-shadow:none; color:#999; cursor:default}
-  .floor.current{border-color:var(--accent); border-width:2.5px}
-  @keyframes glowPulse{0%,100%{box-shadow:3px 3px 0 rgba(30,36,48,.12), 0 0 0 0 rgba(232,72,28,.35)}50%{box-shadow:3px 3px 0 rgba(30,36,48,.12), 0 0 0 6px rgba(232,72,28,0)}}
-  .floor.current{animation:glowPulse 1.8s infinite}
+  .floor .fmid{flex:1; min-width:0}
+  .fname{white-space:nowrap}
+  .fzone{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block}
+  .floor.done{border-color:var(--cool); box-shadow:0 0 0 2.5px #fff, 3px 4px 0 2.5px var(--cool); background:#F0FBFF}
+  .floor.locked{background:#EEEBE4; border-color:#B9B4C2; box-shadow:0 0 0 2.5px #fff, 3px 4px 0 2.5px #B9B4C2; color:#9B96A8; cursor:default}
+  .floor.current{border-color:var(--accent); box-shadow:0 0 0 2.5px #fff, 3px 4px 0 2.5px var(--accent)}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-2.5deg)}75%{transform:rotate(2.5deg)}}
+  .floor.current .thiefMini{animation:wiggle 1.6s ease-in-out infinite}
+  .thiefMini{flex-shrink:0; display:flex}
   .fnum{
-    font-family:'Black Han Sans'; font-size:.9rem; min-width:36px; height:min(36px,70%);
-    border:2px solid var(--ink); border-radius:9px;
-    display:flex; align-items:center; justify-content:center; background:var(--ice);
+    font-family:'Bagel Fat One',cursive; font-size:.92rem; min-width:38px; height:min(38px,72%);
+    border:2.5px solid var(--ink); border-radius:11px;
+    display:flex; align-items:center; justify-content:center; background:var(--lemon);
     transition:background .5s; flex-shrink:0;
   }
-  .floor.done .fnum{background:var(--cool); color:#fff; border-color:var(--cool)}
-  .floor.current .fnum{background:var(--accent); color:#fff; border-color:var(--accent)}
-  .floor.locked .fnum{background:#E2DED8; border-color:#BBB; color:#999}
-  .fname{font-size:.82rem; font-weight:bold; line-height:1.2}
-  .fzone{font-size:.62rem; color:#888; line-height:1.2}
-  .floor.locked .fzone{color:#AAA}
-  .fstate{margin-left:auto; font-size:.95rem; flex-shrink:0}
-  footer{font-size:.56rem; color:#999; text-align:center; padding:4px 16px 7px; line-height:1.5; flex-shrink:0}
+  .floor.done .fnum{background:var(--cool); color:#fff; border-color:var(--ink)}
+  .floor.current .fnum{background:var(--accent); color:#fff}
+  .floor.locked .fnum{background:#DEDAE3; border-color:#B9B4C2; color:#9B96A8}
+  .fname{font-family:'Bagel Fat One',cursive; font-size:.86rem; line-height:1.25}
+  .fzone{font-size:.6rem; color:#8b8698; line-height:1.25}
+  .floor.locked .fzone{color:#AFAABB}
+  .fright{margin-left:auto; text-align:right; flex-shrink:0; display:flex; align-items:center; gap:7px}
+  .fcount{font-family:'Bagel Fat One',cursive; font-size:.6rem; color:#8b8698; background:#fff;
+    border:2px solid var(--ink); border-radius:99px; padding:2px 8px}
+  .floor.locked .fcount{border-color:#B9B4C2}
+  .fstate{font-size:1rem}
+  footer{font-size:.54rem; color:#9B96A8; text-align:center; padding:5px 4px calc(6px + env(safe-area-inset-bottom)); line-height:1.5; flex-shrink:0}
+  footer button{border:none; background:none; color:#B9B4C2; font-size:.54rem; text-decoration:underline; cursor:pointer}
 
   /* ================= 층 시트 ================= */
-  #sheetVeil{position:fixed; inset:0; background:rgba(20,24,34,.5); z-index:90; display:flex;
+  #sheetVeil{position:fixed; inset:0; background:rgba(23,20,42,.55); z-index:90; display:flex;
     align-items:flex-end; justify-content:center;
-    opacity:0; visibility:hidden; transition:opacity .28s ease, visibility .28s}
+    opacity:0; visibility:hidden; transition:opacity .28s, visibility .28s}
   #sheetVeil.show{opacity:1; visibility:visible}
   #sheetVeil.show #sheet{transform:none}
   #sheet{
-    width:100%; max-width:430px; background:#fff;
-    border:3px solid var(--ink); border-bottom:none; border-radius:20px 20px 0 0;
-    padding:15px 17px calc(14px + env(safe-area-inset-bottom));
-    max-height:80dvh; overflow-y:auto;
+    width:100%; max-width:430px; background:var(--paper);
+    border:3px solid var(--ink); border-bottom:none; border-radius:24px 24px 0 0;
+    padding:16px 17px calc(14px + env(safe-area-inset-bottom));
+    max-height:82dvh; overflow-y:auto;
     transform:translateY(30%); transition:transform .34s cubic-bezier(.2,.9,.3,1);
   }
-  #sheet .s-head{display:flex; align-items:center; gap:10px; margin-bottom:2px}
-  #sheet .s-head .fnum{width:38px; height:38px; font-size:.95rem; background:var(--accent); color:#fff; border-color:var(--accent)}
-  #sheet .s-title{font-size:.98rem; font-weight:bold}
-  #sheet .s-zone{font-size:.68rem; color:#888}
-  #sheet .close{margin-left:auto; border:none; background:#eee; border-radius:99px; width:30px; height:30px; font-size:.95rem; cursor:pointer}
+  #sheet .s-head{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+  #sheet .s-head .fnum{width:40px; height:40px; font-size:1rem; background:var(--accent); color:#fff}
+  #sheet .s-title{font-family:'Bagel Fat One',cursive; font-size:1.05rem}
+  #sheet .s-zone{font-size:.66rem; color:#8b8698}
+  .ev-tag{margin-left:auto; font-family:'Bagel Fat One',cursive; font-size:.56rem; letter-spacing:.08em;
+    color:var(--hot); border:2px solid var(--hot); padding:2px 8px; border-radius:99px;
+    transform:rotate(-3deg); flex-shrink:0}
+  #sheet .close{margin-left:6px; border:2.5px solid var(--ink); background:#fff; border-radius:99px; width:32px; height:32px; font-size:.95rem; cursor:pointer; box-shadow:2px 2px 0 var(--ink); flex-shrink:0}
   .memo{
-    background:var(--note); padding:11px 13px 10px; margin:9px 0;
-    font-size:.84rem; line-height:1.58; position:relative;
-    transform:rotate(-.6deg); box-shadow:2px 3px 8px rgba(0,0,0,.12);
-    clip-path:polygon(0 4%, 4% 0, 96% 1%, 100% 6%, 99% 95%, 95% 100%, 3% 99%, 0 94%);
+    background:var(--lemon); padding:11px 14px 9px; margin:10px 0;
+    font-family:'Gaegu',cursive; font-size:1.22rem; line-height:1.42; position:relative;
+    transform:rotate(-.6deg); border:2.5px solid var(--ink); border-radius:4px 18px 4px 18px;
+    box-shadow:3px 4px 0 rgba(23,20,42,.85);
   }
-  .memo .who{font-size:.63rem; letter-spacing:.1em; color:#8a6d00; display:block; margin-bottom:3px}
+  .memo .who{font-family:'Bagel Fat One',cursive; font-size:.6rem; letter-spacing:.1em; color:#9a7d00; display:block; margin-bottom:3px}
   .scanBtn{
     display:flex; align-items:center; justify-content:center; gap:8px;
-    width:100%; border:none; cursor:pointer; margin:2px 0 10px;
-    font-family:'Black Han Sans'; font-size:1.05rem; color:#fff;
-    background:var(--ink); padding:14px; border-radius:12px;
-    box-shadow:0 4px 0 rgba(0,0,0,.25);
+    width:100%; border:3px solid var(--ink); cursor:pointer; margin:4px 0 12px;
+    font-family:'Bagel Fat One',cursive; font-size:1.05rem; color:#fff;
+    background:var(--ink); padding:13px; border-radius:16px;
+    box-shadow:4px 5px 0 rgba(23,20,42,.35);
   }
-  .scanBtn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.25)}
-  .slot-head{display:flex; justify-content:space-between; align-items:baseline; font-size:.7rem; color:#888; margin:2px 1px 6px}
-  .slot-head b{color:var(--accent); font-family:'Black Han Sans'; font-size:.82rem; transition:color 1.2s}
-  .slots{display:flex; gap:6px; margin-bottom:4px}
+  .scanBtn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(23,20,42,.35)}
+  .slot-head{display:flex; justify-content:space-between; align-items:baseline; font-size:.7rem; color:#8b8698; margin:0 1px 7px}
+  .slot-head b{color:var(--accent); font-family:'Bagel Fat One',cursive; font-size:.85rem}
+  .slots{display:grid; grid-template-columns:1fr 1fr; gap:7px}
+  .slots.single{grid-template-columns:1fr}
   .slot{
-    flex:1; border-radius:10px; padding:8px 0 7px; text-align:center;
-    font-family:inherit; line-height:1.25; transition:background .3s, border-color .3s, opacity .3s;
+    border-radius:13px; padding:9px 8px; text-align:center;
+    font-family:inherit; line-height:1.3; transition:background .3s, border-color .3s;
   }
-  .slot .s-ic{display:block; font-size:1.05rem; margin-bottom:2px}
-  .slot b{display:block; font-size:.64rem}
-  .slot .s-sub{display:block; font-size:.55rem; margin-top:1px; opacity:.85}
-  .slot.todo{border:2px dashed #CFC8BB; background:#FAF8F4; color:#A9A091}
-  .slot.seen{border:2px solid #DDDDDD; background:#F1F1F1; color:#777; cursor:pointer}
-  .slot.gem{border:2px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer}
+  .slot .s-ic{display:block; font-size:1.15rem; margin-bottom:2px}
+  .slot b{display:block; font-size:.72rem}
+  .slot .s-sub{display:block; font-size:.56rem; margin-top:1px; opacity:.85}
+  .slot.todo{border:2.5px dashed #C9C3D4; background:#FBFAF6; color:#8b8698}
+  .slot.todo b{color:var(--ink)}
+  .slot.seen{border:2.5px solid #D5D1DD; background:#F0EEF3; color:#8b8698; cursor:pointer}
+  .slot.gem{border:2.5px solid var(--ink); background:var(--accent); color:#fff; cursor:pointer; box-shadow:2px 3px 0 var(--ink)}
   .slot:disabled{cursor:default}
-  .qr-note{font-size:.66rem; color:#888; margin-bottom:6px}
-  .qr-grid{display:flex; gap:6px}
-  .qr{
-    flex:1; border:2px solid var(--ink); border-radius:9px;
-    background:#fff; font-size:.68rem; padding:10px 0 8px;
-    cursor:pointer; color:var(--ink); transition:transform .08s; line-height:1.3;
-  }
-  .qr b{font-family:'Black Han Sans'; font-size:.82rem; display:block}
-  .qr:active{transform:scale(.95)}
-  .qr.scanned{background:#eee; color:#aaa; border-color:#ccc}
-  .qr.gem{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .qr-note{font-family:'Gaegu',cursive; font-size:.85rem; color:#8b8698; margin-top:8px; text-align:center}
 
   /* ================= 카메라 스캐너 ================= */
   #cam{position:fixed; inset:0; z-index:120; background:#000; display:flex; flex-direction:column;
-    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s}
+    opacity:0; visibility:hidden; transition:opacity .3s, visibility .3s}
   #cam.show{opacity:1; visibility:visible}
   #camHit{
     position:absolute; left:50%; top:44%; transform:translate(-50%,-50%) scale(.55);
-    width:86px; height:86px; border-radius:50%; background:#2FBF71; color:#fff;
+    width:86px; height:86px; border-radius:50%; background:var(--mint); color:var(--ink);
+    border:3px solid var(--ink);
     display:flex; align-items:center; justify-content:center; font-size:2.5rem; z-index:5;
     opacity:0; transition:transform .28s cubic-bezier(.2,1.5,.4,1), opacity .2s;
-    box-shadow:0 0 40px rgba(47,191,113,.6);
+    box-shadow:0 0 40px rgba(77,227,184,.7);
   }
   #camHit.show{opacity:1; transform:translate(-50%,-50%) scale(1)}
   #cam video{flex:1; width:100%; object-fit:cover}
   #camFrame{
     position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
     width:min(64vw,250px); aspect-ratio:1; border:3px solid rgba(255,255,255,.9);
-    border-radius:18px; box-shadow:0 0 0 200vmax rgba(0,0,0,.45); pointer-events:none;
+    border-radius:22px; box-shadow:0 0 0 200vmax rgba(0,0,0,.45); pointer-events:none;
   }
   #camMsg{
     position:absolute; left:0; right:0; top:calc(44% + min(34vw,135px) + 14px);
-    text-align:center; color:#fff; font-size:.85rem; text-shadow:0 1px 3px #000;
+    text-align:center; color:#fff; font-size:.85rem; text-shadow:0 1px 3px #000; padding:0 20px;
   }
   #camClose{
     position:absolute; top:calc(14px + env(safe-area-inset-top)); right:14px;
     border:none; background:rgba(255,255,255,.18); color:#fff; border-radius:99px;
     width:40px; height:40px; font-size:1.15rem; cursor:pointer; backdrop-filter:blur(4px);
   }
+  #camStat{position:absolute; left:12px; top:calc(14px + env(safe-area-inset-top)); font-size:.62rem; color:#9fd8ff; background:rgba(0,0,0,.45); padding:4px 9px; border-radius:8px; line-height:1.5}
 
-  /* ================= 토스트 ================= */
+  /* ================= 토스트 / 모달 ================= */
   #toast{
     position:fixed; left:50%; bottom:9dvh; transform:translateX(-50%);
     background:var(--ink); color:#fff; font-size:.82rem; padding:10px 18px;
     border-radius:99px; z-index:130; opacity:0; pointer-events:none;
     transition:opacity .25s; max-width:86vw; text-align:center;
+    border:2px solid #fff; box-shadow:3px 3px 0 rgba(0,0,0,.3);
   }
   #toast.show{opacity:1}
-
-  /* ================= 결과 모달 ================= */
-  #veil{position:fixed; inset:0; background:rgba(20,24,34,.55); z-index:100; display:flex;
+  #veil{position:fixed; inset:0; background:rgba(23,20,42,.6); z-index:100; display:flex;
     align-items:center; justify-content:center; padding:20px;
-    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s}
+    opacity:0; visibility:hidden; transition:opacity .3s, visibility .3s}
   #veil.show{opacity:1; visibility:visible}
   #modal{
-    width:100%; max-width:360px; background:#fff; border:3px solid var(--ink);
-    border-radius:18px; padding:19px 17px; text-align:center;
-    max-height:80dvh; overflow-y:auto;
+    width:100%; max-width:360px; padding:20px 18px; text-align:center;
+    max-height:80dvh; overflow-y:auto; overflow-x:hidden; position:relative;
     transform:translateY(18px) scale(.96); opacity:0;
-    transition:transform .34s cubic-bezier(.2,.9,.3,1.15), opacity .26s ease;
+    transition:transform .34s cubic-bezier(.2,.9,.3,1.15), opacity .26s;
   }
   #veil.show #modal{transform:none; opacity:1}
-  .again{display:inline-block; font-size:.66rem; color:#888; background:#eee;
-    padding:3px 11px; border-radius:99px; margin-bottom:6px}
-  #modal .icon{font-size:2.2rem; margin-bottom:4px}
-  #modal h2{font-family:'Black Han Sans'; font-size:1.15rem; margin-bottom:8px}
-  #modal .quote{
-    font-size:.85rem; line-height:1.62; background:#f7f7f7; border-left:4px solid var(--ink);
-    padding:10px 12px; text-align:left; margin-bottom:8px; border-radius:0 8px 8px 0;
+  .stampSeal{
+    position:absolute; top:12px; right:14px; z-index:3;
+    font-family:'Bagel Fat One',cursive; color:var(--hot);
+    border:3px solid var(--hot); border-radius:10px; padding:2px 10px;
+    font-size:1.05rem; letter-spacing:.14em;
+    transform:rotate(12deg) scale(2.4); opacity:0; pointer-events:none;
   }
+  #veil.show .stampSeal{animation:stampIn .5s .3s cubic-bezier(.2,1.3,.4,1) forwards}
+  @keyframes stampIn{
+    0%{transform:rotate(12deg) scale(2.4); opacity:0}
+    55%{transform:rotate(-9deg) scale(.9); opacity:1}
+    75%{transform:rotate(-11deg) scale(1.08)}
+    100%{transform:rotate(-10deg) scale(1); opacity:1}
+  }
+  .again{display:inline-block; font-size:.64rem; color:#8b8698; background:#EFEDF2; padding:3px 11px; border-radius:99px; margin-bottom:6px}
+  #modal .icon{font-size:2.2rem; margin-bottom:4px}
+  #modal .m-loc{font-family:'Bagel Fat One',cursive; font-size:.62rem; letter-spacing:.14em; color:#8b8698; margin-bottom:2px}
+  #modal h2{font-family:'Bagel Fat One',cursive; font-size:1.15rem; margin-bottom:9px}
+  #modal .quote{
+    font-size:.85rem; line-height:1.62; background:#F4F8FF; border:2px solid var(--cool);
+    padding:10px 12px; text-align:left; margin-bottom:8px; border-radius:12px;
+  }
+  #modal .quote b{color:var(--cool)}
   #modal .thief{
-    font-size:.79rem; line-height:1.55; color:#7a5c00; background:var(--note);
-    padding:9px 11px; border-radius:8px; text-align:left; margin-bottom:12px; transform:rotate(.4deg);
+    font-family:'Gaegu',cursive; font-size:1.18rem; line-height:1.4; color:#7a5c00; background:var(--lemon);
+    border:2px solid var(--ink); padding:9px 12px; border-radius:4px 14px 4px 14px; text-align:left; margin:0 1px 13px;
   }
   #modal .thief::before{content:"🕶 여름 도둑 : "; font-weight:bold}
-  #modal .drop{font-family:'Black Han Sans'; font-size:1.8rem; color:var(--cool); margin:4px 0 2px}
-  #modal .drop small{font-size:.82rem; color:var(--ink); display:block; font-family:'Gowun Dodum'}
-  #modal .btn{font-size:.92rem; padding:12px}
+  #modal .drop{font-family:'Bagel Fat One',cursive; font-size:1.8rem; color:var(--cool); margin:2px 0 4px}
+  #modal .drop small{font-size:.8rem; color:var(--ink); display:block; font-family:'Noto Sans KR'}
+  #modal .btn{font-size:.95rem; padding:12px}
 
   /* ================= 클리어 ================= */
-  #clear{display:none; height:100dvh; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); text-align:center; flex-direction:column; justify-content:space-evenly; gap:6px}
-  #clear .big{font-family:'Black Han Sans'; font-size:clamp(2.2rem,11vw,3rem); color:var(--cool); text-shadow:2px 2px 0 #fff; line-height:1}
-  #clear .big small{display:block; font-size:.82rem; color:var(--ink); text-shadow:none; font-family:'Gowun Dodum'; margin-top:4px}
-  #clear h2{font-family:'Black Han Sans'; font-size:clamp(1.2rem,5.6vw,1.5rem)}
-  #clear svg{width:min(52vw,210px); height:auto; margin:0 auto}
+  #clear{display:none; height:100dvh; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); text-align:center; flex-direction:column; justify-content:center}
+  .wc{
+    position:relative; padding:16px 16px 14px; margin:6px;
+    display:flex; flex-direction:column; gap:8px; max-height:96dvh; overflow:hidden;
+  }
+  .wc-wanted{
+    font-family:'Bagel Fat One',cursive; font-size:clamp(1.9rem,10vw,2.4rem);
+    letter-spacing:.24em; color:var(--ink); opacity:.22; line-height:1;
+    text-decoration:line-through; text-decoration-thickness:5px; text-decoration-color:var(--hot);
+  }
+  .wc-stamp{
+    position:absolute; top:11px; right:12px; transform:rotate(-11deg);
+    font-family:'Bagel Fat One',cursive; color:var(--hot); border:3px solid var(--hot);
+    border-radius:10px; padding:3px 11px; font-size:1rem; letter-spacing:.12em;
+    animation:stampIn .5s .4s cubic-bezier(.2,1.3,.4,1) both; background:rgba(255,255,255,.75);
+  }
+  .wc svg{width:min(48vw,190px); height:auto; margin:0 auto; flex-shrink:1; min-height:0}
+  .wc-name{font-size:.92rem}
+  .wc-name b{font-family:'Gaegu',cursive; font-size:1.55rem; color:var(--hot)}
+  .wc-meta{font-family:'Bagel Fat One',cursive; font-size:.6rem; color:#8b8698; letter-spacing:.06em}
+  .wc-meta b{color:var(--cool)}
   .capture-box{
-    background:#fff; border:3px solid var(--cool); border-radius:16px;
+    background:#fff; border:3px solid var(--cool); border-radius:18px;
     padding:12px 14px; margin:0 auto; width:100%; max-width:320px;
+    box-shadow:3px 4px 0 var(--cool);
   }
   .capture-box .cap{font-size:.86rem; line-height:1.55; margin-bottom:8px}
   .capture-box .cap b{color:var(--cool)}
-  .code-line{border-top:2px dashed var(--cool); padding-top:8px}
-  .code-line .lbl{font-size:.62rem; letter-spacing:.15em; color:#888}
-  .code-line .code{font-family:'Black Han Sans'; font-size:1.5rem; color:var(--cool); letter-spacing:.1em}
+  .code-line{border-top:2.5px dashed var(--cool); padding-top:8px}
+  .code-line .lbl{font-family:'Bagel Fat One',cursive; font-size:.58rem; letter-spacing:.15em; color:#8b8698}
+  .code-line .code{font-family:'Bagel Fat One',cursive; font-size:1.5rem; color:var(--cool); letter-spacing:.1em}
 
+  #frost{
+    position:fixed; inset:0; pointer-events:none; z-index:60;
+    opacity:var(--frost); transition:opacity 1.4s ease;
+    background:
+      radial-gradient(150% 100% at 50% 125%, transparent 88%, rgba(255,255,255,.5) 100%),
+      radial-gradient(150% 100% at 50% -25%, transparent 88%, rgba(255,255,255,.45) 100%),
+      radial-gradient(100% 150% at -25% 50%, transparent 90%, rgba(235,249,255,.4) 100%),
+      radial-gradient(100% 150% at 125% 50%, transparent 90%, rgba(235,249,255,.4) 100%);
+  }
   .snow{position:fixed; top:-30px; font-size:1.1rem; z-index:99; animation:fall linear forwards; pointer-events:none}
   @keyframes fall{to{transform:translateY(110dvh) rotate(360deg); opacity:.2}}
+
+  /* ================= 추격 전환 연출 ================= */
+  #chaseLoad{position:fixed; inset:0; z-index:140; background:hsl(var(--bg-h) var(--bg-s) var(--bg-l)); display:none; flex-direction:column; align-items:center; justify-content:center; overflow:hidden}
+  #chaseLoad.show{display:flex}
+  #clScene{width:min(82vw,340px)}
+  #clScene svg{width:100%; height:auto; overflow:visible; transform:scaleX(-1); filter:drop-shadow(4px 5px 0 rgba(23,20,42,.15))}
+  #chaseLoad.run #clScene{animation:runAcross 2.4s linear forwards}
+  @keyframes runAcross{0%{transform:translateX(115vw)}100%{transform:translateX(-135vw)}}
+  #chaseLoad.catchM #clScene{animation:runCatch 1.25s cubic-bezier(.2,.85,.3,1) forwards}
+  @keyframes runCatch{0%{transform:translateX(115vw)}100%{transform:translateX(0)}}
+  #chaseLoad.stopped #clScene svg *{animation-play-state:paused}
+  .cl-bubble{font-family:'Gaegu',cursive; font-size:1.5rem; background:#fff; border:3px solid var(--ink); border-radius:18px 18px 4px 18px; padding:7px 18px; margin-bottom:16px; box-shadow:3px 4px 0 rgba(23,20,42,.8); opacity:0; transform:rotate(-2deg)}
+  #chaseLoad.run .cl-bubble{animation:bubblePop .35s .5s forwards}
+  @keyframes bubblePop{to{opacity:1}}
+  .cl-catch{position:absolute; top:26%; left:50%; margin-left:-2.2em; font-family:'Bagel Fat One',cursive; font-size:2rem; color:var(--hot); -webkit-text-stroke:1px var(--ink); text-shadow:3px 3px 0 var(--lemon); opacity:0; z-index:2}
+  .cl-catch.go{animation:stampIn .5s cubic-bezier(.2,1.3,.4,1) forwards}
+  .cl-load{font-family:'Bagel Fat One',cursive; font-size:.8rem; color:#8b8698; margin-top:18px; letter-spacing:.14em}
+  .cl-load i{font-style:normal; animation:dots 1.2s steps(4) infinite; display:inline-block; width:1.4em; text-align:left; overflow:hidden}
+  @keyframes dots{0%{width:0}100%{width:1.4em}}
+  #finalPiece{display:none; position:absolute; inset:0; z-index:4; pointer-events:none; align-items:center; justify-content:center; font-size:5.5rem}
+  #finalPiece.go{display:flex; animation:pieceIn 1.1s cubic-bezier(.2,1.2,.4,1) both, piecePulse .55s 1.1s ease-in-out infinite alternate}
+  @keyframes pieceIn{0%{transform:scale(.15) rotate(-180deg); opacity:0}40%{transform:scale(1.35) rotate(10deg); opacity:1; filter:drop-shadow(0 0 28px rgba(0,168,232,.95))}65%{transform:scale(.95)}100%{transform:scale(1.05); opacity:1; filter:drop-shadow(0 0 16px rgba(0,168,232,.75))}}
+  @keyframes piecePulse{from{transform:scale(1.02); filter:drop-shadow(0 0 10px rgba(0,168,232,.6))}to{transform:scale(1.18); filter:drop-shadow(0 0 34px rgba(0,168,232,1))}}
   @media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ================= 인트로 : 신문 호외 ================= -->
+  <!-- ================= 인트로 : WANTED 포스터 ================= -->
   <section id="intro">
-    <div class="paper">
-      <span class="extra">호외</span>
-      <span style="position:absolute; bottom:6px; right:10px; font-size:.6rem; color:#B8AE9C; font-family:'Gowun Dodum'">빌드 v7 · 엔진 내장</span>
-      <div class="masthead">
-        <span class="name">경청일보</span>
-        <span class="date">2026년 8월</span>
-      </div>
-      <h1 class="headline">경산 <span class="hot">39.9°C</span>…<br>40°C까지 단 0.1°C</h1>
-      <p class="article">
-        전국에 폭염이 쏟아진 7월 11일, 경북 경산 일부 지역의 낮 최고기온이 40도에 육박했다.
-        기상청 관측 기록에 따르면 이날 오후 2시 23분쯤 <b>경산시 하양읍 기온이 39.9도</b>를 찍었다.
-      </p>
-      <div class="flash-box">
-        <!-- 여름 도둑 캐릭터 -->
-        <svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" aria-label="여름 도둑">
-          <!-- 자루 -->
-          <path d="M78 92 q30 -6 30 26 q0 24 -24 24 q-22 0 -20 -22 q1 -16 14 -28" fill="#C9A15A" stroke="#8a6d3b" stroke-width="3"/>
-          <text x="93" y="126" font-size="16" text-anchor="middle">❄️</text>
-          <path d="M76 90 l10 8" stroke="#8a6d3b" stroke-width="3" stroke-linecap="round"/>
-          <!-- 몸통 : 줄무늬 -->
-          <rect x="30" y="72" width="44" height="46" rx="14" fill="#fff" stroke="#1E2430" stroke-width="3"/>
-          <path d="M30 84 h44 M30 96 h44 M30 108 h44" stroke="#1E2430" stroke-width="6"/>
-          <!-- 팔 -->
-          <path d="M32 82 q-14 6 -12 20" fill="none" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
-          <path d="M72 82 q10 4 10 12" fill="none" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
-          <!-- 얼굴 -->
-          <circle cx="52" cy="44" r="26" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
-          <!-- 비니 -->
-          <path d="M27 38 q1 -22 25 -22 q24 0 25 22 l-1 4 h-48 z" fill="#E8481C" stroke="#1E2430" stroke-width="3"/>
-          <rect x="26" y="38" width="52" height="8" rx="4" fill="#1E2430"/>
-          <!-- 아이마스크 -->
-          <rect x="32" y="48" width="40" height="13" rx="6.5" fill="#1E2430"/>
-          <circle cx="44" cy="54.5" r="4" fill="#fff"/>
-          <circle cx="60" cy="54.5" r="4" fill="#fff"/>
-          <circle cx="45" cy="55" r="1.8" fill="#1E2430"/>
-          <circle cx="61" cy="55" r="1.8" fill="#1E2430"/>
-          <!-- 씩 웃음 -->
-          <path d="M45 66 q7 5 14 0" fill="none" stroke="#1E2430" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 다리 -->
-          <path d="M42 118 v14 M62 118 v14" stroke="#1E2430" stroke-width="7" stroke-linecap="round"/>
-          <!-- 땀방울 -->
-          <path d="M83 36 q4 6 0 9 q-4 -3 0 -9" fill="#7FD4FF"/>
-        </svg>
-        <div class="flash-txt">
-          <span class="bstamp">긴급 속보</span>
-          <h2>그날 밤, <span>시원함 도난 사건</span> 발생</h2>
-          <p>40°C를 막던 마지막 0.1°C가 사라졌다. 용의자는 경청지놀 1~7층 어딘가에 그것을 숨긴 것으로 추정. 층마다 남긴 메모가 유일한 단서다.</p>
-          <span class="wanted">WANTED — 목격 시 즉시 추리할 것</span>
-        </div>
-      </div>
+    <div class="ticker"><span>🚨 긴급 속보 — 시원함 도난 사건 발생 · 경산 39.9°C, 40°C까지 단 0.1°C · 용의자는 경청지놀 1~7층에 잠복 중 · 목격 시 즉시 추리할 것 🚨</span></div>
+    <div class="poster sticker">
+      <span class="star-badge sb1">현상수배</span>
+      <span class="star-badge sb2">체감 39.9°</span>
+      <span class="star-badge sb3">단서 22곳 = 명탐정</span>
+      <div class="wanted-arc">WANTED</div>
+      <div class="sub-arc">여름 도둑 · SUMMER THIEF</div>
+      <div class="chase" role="img" aria-label="호루라기를 불며 쫓아오는 경찰과 도망치는 여름 도둑">
+      <svg viewBox="0 0 335 192" xmlns="http://www.w3.org/2000/svg">
+        <line x1="14" y1="184" x2="322" y2="184" stroke="#17142A" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 16" opacity=".28"/>
+        <g class="speed" stroke="#B9B4C2" stroke-width="4.5" stroke-linecap="round" fill="none">
+          <path d="M2 58 h44"/><path d="M-6 96 h38"/><path d="M6 134 h48"/>
+        </g>
+        <g class="copRun">
+          <g transform="translate(18,22) rotate(5 75 100) scale(.9)">
+            <g class="legK"><path d="M62 146 v18" stroke="#17142A" stroke-width="8" stroke-linecap="round"/><path d="M60 166 h9" stroke="#17142A" stroke-width="7" stroke-linecap="round"/></g>
+            <g class="legF"><path d="M88 146 v18" stroke="#17142A" stroke-width="8" stroke-linecap="round"/><path d="M86 166 h9" stroke="#17142A" stroke-width="7" stroke-linecap="round"/></g>
+            <rect x="48" y="98" width="54" height="48" rx="20" fill="#00A8E8" stroke="#17142A" stroke-width="3.5"/>
+            <rect x="47" y="126" width="56" height="9" rx="4.5" fill="#17142A"/>
+            <text x="62" y="120" font-size="14">⭐</text>
+            <path d="M52 106 q-16 6 -18 20" fill="none" stroke="#17142A" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="33" cy="128" r="6.5" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+            <path d="M98 106 q14 -2 18 -14" fill="none" stroke="#17142A" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="118" cy="90" r="6.5" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+            <circle cx="75" cy="62" r="32" fill="#FFDFB8" stroke="#17142A" stroke-width="3.5"/>
+            <path d="M45 54 q3 -28 30 -28 q27 0 30 28 z" fill="#0083C4" stroke="#17142A" stroke-width="3.5"/>
+            <rect x="41" y="52" width="68" height="11" rx="5.5" fill="#17142A"/>
+            <path d="M106 55 q17 2 19 11 q-9 6 -21 1 z" fill="#0083C4" stroke="#17142A" stroke-width="3"/>
+            <circle cx="75" cy="35" r="4" fill="#FFD400" stroke="#17142A" stroke-width="2.5"/>
+            <circle cx="63" cy="74" r="6.5" fill="#fff"/><circle cx="89" cy="74" r="6.5" fill="#fff"/>
+            <circle cx="65" cy="75" r="2.8" fill="#17142A"/><circle cx="91" cy="75" r="2.8" fill="#17142A"/>
+            <path d="M55 66 l14 3 M97 69 l-14 -3" stroke="#17142A" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <ellipse cx="53" cy="86" rx="5" ry="3.2" fill="#FF9DB2" opacity=".8"/>
+            <path d="M78 90 h14" stroke="#17142A" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="99" cy="91" r="7.5" fill="#FFD400" stroke="#17142A" stroke-width="3"/>
+          </g>
+          <g class="beep" stroke="#FF4D6D" stroke-width="3.5" stroke-linecap="round" fill="none">
+            <path d="M133 88 q7 7 1 15"/>
+            <path d="M141 82 q10 10 2 22"/>
+          </g>
+        </g>
+        <g class="wind" stroke="#7FD4FF" stroke-width="4" stroke-linecap="round" fill="none" opacity=".75">
+          <path d="M310 70 q14 6 26 2"/>
+          <path d="M318 108 q16 4 30 -2"/>
+          <path d="M306 146 q14 8 28 4"/>
+        </g>
+        <g class="thiefRun">
+          <g transform="translate(182,10) rotate(8 75 100) scale(.94)">
+            <path d="M104 96 q34 -4 36 30 q1 27 -25 27 q-24 0 -22 -24 q1 -18 11 -33" fill="#FFC94D" stroke="#17142A" stroke-width="3.5"/>
+            <path d="M103 94 l9 10" stroke="#17142A" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="117" y="133" font-size="19" text-anchor="middle">❄️</text>
+            <g class="dash" stroke="#17142A" fill="none" stroke-linecap="round" opacity=".28">
+              <path d="M52 158 q23 14 46 0" stroke-width="5"/>
+              <path d="M56 168 q19 10 38 0" stroke-width="4"/>
+            </g>
+            <g class="legF"><path d="M62 146 v18" stroke="#17142A" stroke-width="8" stroke-linecap="round"/><path d="M60 166 h9" stroke="#17142A" stroke-width="7" stroke-linecap="round"/></g>
+            <g class="legK"><path d="M88 146 v18" stroke="#17142A" stroke-width="8" stroke-linecap="round"/><path d="M86 166 h9" stroke="#17142A" stroke-width="7" stroke-linecap="round"/></g>
+            <rect x="48" y="98" width="54" height="48" rx="20" fill="#fff" stroke="#17142A" stroke-width="3.5"/>
+            <path d="M48 111 h54 M48 124 h54 M48 137 h54" stroke="#17142A" stroke-width="7"/>
+            <path d="M50 108 q-15 8 -13 24" fill="none" stroke="#17142A" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="37" cy="133" r="6.5" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+            <path d="M100 106 q11 -6 13 -16" fill="none" stroke="#17142A" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="114" cy="88" r="6.5" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+            <circle cx="75" cy="62" r="36" fill="#FFDFB8" stroke="#17142A" stroke-width="3.5"/>
+            <circle cx="75" cy="18" r="8.5" fill="#fff" stroke="#17142A" stroke-width="3"/>
+            <path d="M39 56 q2 -34 36 -34 q34 0 36 34 l-1 4 h-70 z" fill="#FF4D6D" stroke="#17142A" stroke-width="3.5"/>
+            <path d="M55 29 q-4 12 -5 25 M75 24 v30 M95 29 q4 12 5 25" stroke="#D93A58" stroke-width="3" fill="none"/>
+            <rect x="37" y="55" width="76" height="12" rx="6" fill="#D93A58" stroke="#17142A" stroke-width="3"/>
+            <rect x="46" y="69" width="58" height="18" rx="9" fill="#17142A"/>
+            <circle cx="62" cy="78" r="7" fill="#fff"/><circle cx="88" cy="78" r="7" fill="#fff"/>
+            <circle cx="63.5" cy="79" r="3" fill="#17142A"/><circle cx="89.5" cy="79" r="3" fill="#17142A"/>
+            <circle cx="65.5" cy="76.5" r="1.6" fill="#fff"/><circle cx="91.5" cy="76.5" r="1.6" fill="#fff"/>
+            <ellipse cx="51" cy="92" rx="5.5" ry="3.4" fill="#FF9DB2" opacity=".8"/>
+            <ellipse cx="99" cy="92" rx="5.5" ry="3.4" fill="#FF9DB2" opacity=".8"/>
+            <path d="M60 95 q8 -6 16 0" fill="none" stroke="#17142A" stroke-width="3" stroke-linecap="round"/>
+            <path d="M116 52 q5 7 0 11 q-5 -4 0 -11" fill="#7FD4FF" stroke="#4FB6E8" stroke-width="1.5"/>
+          </g>
+        </g>
+      </svg>
     </div>
-    <button class="btn" onclick="startGame()">🕵️ 경청 수사대 — 수사 착수</button>
+      <h1>40°C를 막던 <em>마지막 0.1°C</em>를<br>훔쳐 달아난 여름 도둑!</h1>
+      <p class="story">도둑은 경청지놀 <b>1층부터 7층</b> 곳곳에 시원함을 숨겼다.<br>층마다 남긴 메모를 추리해 <b>진짜 보물 QR</b>을 찾아라.</p>
+      <div class="reward">🎁 보물 7개 → 전리품 · 단서 22개 완집 → 명탐정 경품 추첨!</div>
+      <span style="position:absolute; bottom:5px; right:12px; font-size:.56rem; color:#B9B4C2">빌드 v11</span>
+    </div>
+    <button class="btn" onclick="openReg()">🕵️ 경청 수사대 — 수사 착수</button>
   </section>
 
   <!-- ================= 메인 ================= -->
   <section id="game">
-    <header id="hud">
+    <header id="hud" class="sticker">
       <div class="row">
         <div>
           <div id="tempLabel">현재 체감온도</div>
           <div id="tempNow">39.9<small>°C</small></div>
         </div>
-        <div id="found">되찾은 시원함<br><b>0</b> / 7</div>
+        <svg id="flake" viewBox="0 0 100 100" width="48" height="48" aria-label="시원함의 조각 게이지">
+          <g transform="rotate(0 50 50)"><g class="sf" id="sf1"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <g transform="rotate(60 50 50)"><g class="sf" id="sf2"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <g transform="rotate(120 50 50)"><g class="sf" id="sf3"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <g transform="rotate(180 50 50)"><g class="sf" id="sf4"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <g transform="rotate(240 50 50)"><g class="sf" id="sf5"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <g transform="rotate(300 50 50)"><g class="sf" id="sf6"><path d="M50 40 V12 M50 22 l-9 -9 M50 22 l9 -9"/></g></g>
+          <circle class="sf ctr" id="sf7" cx="50" cy="50" r="10"/>
+        </svg>
+        <div id="found">되찾은 시원함 <b>0</b>/7<br><span id="clueCt">🔍 단서 0/22</span></div>
+        <button id="snd" onclick="toggleSnd()" aria-label="효과음">🔊</button>
       </div>
       <div id="bar"><div id="barFill"></div></div>
     </header>
     <main>
-      <p class="hint-line">1층부터 차례로 해결하세요 — 지금 수사 중인 층이 빛납니다</p>
+      <p class="hint-line" id="hintLine">1층부터 차례로! 도둑은 지금 반짝이는 층에 있다 👀</p>
       <div id="floors"></div>
     </main>
-    <footer>QR 스캔용 카메라는 판정에만 사용되며 촬영 이미지가 저장·전송되지 않습니다</footer>
+    <footer>QR 스캔 카메라는 판정에만 사용되며 이미지가 저장·전송되지 않습니다 · <button onclick="resetGame()">수사 기록 초기화</button></footer>
   </section>
 
   <!-- ================= 클리어 ================= -->
   <section id="clear">
-    <div class="big">22.0°<small>쾌적 — 시원함 복원 완료</small></div>
-    <h2>여름 도둑 검거 성공!</h2>
-    <!-- 검거 픽토그램 : 탐정 & 도둑 -->
-    <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" aria-label="탐정이 도둑을 검거한 모습">
-      <!-- 바닥 -->
-      <line x1="20" y1="128" x2="240" y2="128" stroke="#1E2430" stroke-width="3" stroke-linecap="round"/>
-      <!-- 도둑 (왼쪽, 두 손 위로) -->
-      <g>
-        <path d="M52 30 q-8 10 -4 16 M92 30 q8 10 4 16" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
-        <circle cx="72" cy="52" r="16" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
-        <path d="M57 48 q1 -13 15 -13 q14 0 15 13 z" fill="#E8481C" stroke="#1E2430" stroke-width="2.5"/>
-        <rect x="60" y="50" width="24" height="8" rx="4" fill="#1E2430"/>
-        <circle cx="67" cy="54" r="2.2" fill="#fff"/><circle cx="77" cy="54" r="2.2" fill="#fff"/>
-        <path d="M66 62 q6 -3 12 0" fill="none" stroke="#1E2430" stroke-width="2" stroke-linecap="round"/><!-- 시무룩 -->
-        <rect x="58" y="68" width="28" height="34" rx="10" fill="#fff" stroke="#1E2430" stroke-width="3"/>
-        <path d="M58 77 h28 M58 86 h28 M58 95 h28" stroke="#1E2430" stroke-width="4.5"/>
-        <path d="M64 102 v24 M80 102 v24" stroke="#1E2430" stroke-width="6" stroke-linecap="round"/>
-        <!-- 수갑 연결 -->
-        <path d="M94 46 q22 8 34 28" stroke="#5B6470" stroke-width="3.5" stroke-dasharray="2 5" fill="none"/>
-      </g>
-      <!-- 떨어진 자루 -->
-      <path d="M18 112 q16 -10 26 4 q4 10 -8 12 q-18 2 -18 -16" fill="#C9A15A" stroke="#8a6d3b" stroke-width="2.5"/>
-      <text x="31" y="124" font-size="11" text-anchor="middle">❄️</text>
-      <!-- 탐정 (오른쪽) -->
-      <g>
-        <circle cx="176" cy="56" r="16" fill="#FFDFB8" stroke="#1E2430" stroke-width="3"/>
-        <path d="M156 46 h40 l-6 -8 h-28 z" fill="#5B4632" stroke="#1E2430" stroke-width="2.5"/>
-        <rect x="158" y="38" width="36" height="5" fill="#1E2430" opacity="0"/>
-        <path d="M160 46 h32" stroke="#1E2430" stroke-width="3"/>
-        <circle cx="170" cy="56" r="2.2" fill="#1E2430"/><circle cx="182" cy="56" r="2.2" fill="#1E2430"/>
-        <path d="M169 65 q7 4 14 0" fill="none" stroke="#1E2430" stroke-width="2.2" stroke-linecap="round"/><!-- 미소 -->
-        <path d="M162 74 h28 l6 34 h-40 z" fill="#8B6F47" stroke="#1E2430" stroke-width="3"/>
-        <path d="M176 74 v34" stroke="#1E2430" stroke-width="2"/>
-        <!-- 팔 : 수갑 잡음 / 돋보기 -->
-        <path d="M164 80 q-20 -2 -34 -8" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
-        <path d="M188 80 q16 4 20 -6" stroke="#1E2430" stroke-width="6" stroke-linecap="round" fill="none"/>
-        <circle cx="214" cy="66" r="9" fill="none" stroke="#1D8FCB" stroke-width="3.5"/>
-        <path d="M220 73 l8 9" stroke="#1D8FCB" stroke-width="4" stroke-linecap="round"/>
-        <path d="M168 108 v18 M184 108 v18" stroke="#1E2430" stroke-width="6" stroke-linecap="round"/>
-      </g>
-      <!-- CASE CLOSED 도장 -->
-      <g transform="rotate(-10 130 22)">
-        <rect x="96" y="10" width="68" height="22" rx="4" fill="none" stroke="#1D8FCB" stroke-width="2.5"/>
-        <text x="130" y="26" font-size="12" text-anchor="middle" fill="#1D8FCB" font-family="Black Han Sans" letter-spacing="1">CASE CLOSED</text>
-      </g>
-    </svg>
-    <div class="capture-box">
-      <p class="cap">📸 <b>지금 이 화면을 캡처하세요!</b><br>캡처 화면을 <b>1층 데스크</b>에 보여주면<br>전리품 보물상자를 열 수 있습니다.</p>
-      <div class="code-line">
-        <span class="lbl">검거 확인 코드</span>
-        <div class="code" id="clearCode">COOL-0000</div>
+    <div class="wc sticker">
+      <div class="wc-wanted">WANTED</div>
+      <div class="wc-stamp">검거 완료</div>
+      <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" aria-label="탐정이 도둑을 검거한 모습">
+        <line x1="20" y1="128" x2="240" y2="128" stroke="#17142A" stroke-width="3" stroke-linecap="round"/>
+        <g>
+          <path d="M52 30 q-8 10 -4 16 M92 30 q8 10 4 16" stroke="#17142A" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <circle cx="72" cy="52" r="16" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+          <path d="M57 48 q1 -13 15 -13 q14 0 15 13 z" fill="#FF4D6D" stroke="#17142A" stroke-width="2.5"/>
+          <rect x="60" y="50" width="24" height="8" rx="4" fill="#17142A"/>
+          <circle cx="72" cy="33" r="4" fill="#fff" stroke="#17142A" stroke-width="2"/>
+          <circle cx="67" cy="54" r="2.8" fill="#fff"/><circle cx="77" cy="54" r="2.8" fill="#fff"/>
+          <circle cx="67.8" cy="54.5" r="1.2" fill="#17142A"/><circle cx="77.8" cy="54.5" r="1.2" fill="#17142A"/>
+          <path d="M66 62 q6 -3 12 0" fill="none" stroke="#17142A" stroke-width="2" stroke-linecap="round"/>
+          <rect x="58" y="68" width="28" height="34" rx="10" fill="#fff" stroke="#17142A" stroke-width="3"/>
+          <path d="M58 77 h28 M58 86 h28 M58 95 h28" stroke="#17142A" stroke-width="4.5"/>
+          <path d="M64 102 v24 M80 102 v24" stroke="#17142A" stroke-width="6" stroke-linecap="round"/>
+          <path d="M94 46 q22 8 34 28" stroke="#5B6470" stroke-width="3.5" stroke-dasharray="2 5" fill="none"/>
+        </g>
+        <path d="M18 112 q16 -10 26 4 q4 10 -8 12 q-18 2 -18 -16" fill="#FFC94D" stroke="#17142A" stroke-width="2.5"/>
+        <text x="31" y="124" font-size="11" text-anchor="middle">❄️</text>
+        <g>
+          <circle cx="176" cy="56" r="16" fill="#FFDFB8" stroke="#17142A" stroke-width="3"/>
+          <path d="M156 46 h40 l-6 -8 h-28 z" fill="#5B4632" stroke="#17142A" stroke-width="2.5"/>
+          <path d="M160 46 h32" stroke="#17142A" stroke-width="3"/>
+          <circle cx="170" cy="56" r="2.2" fill="#17142A"/><circle cx="182" cy="56" r="2.2" fill="#17142A"/>
+          <path d="M169 65 q7 4 14 0" fill="none" stroke="#17142A" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M162 74 h28 l6 34 h-40 z" fill="#8B6F47" stroke="#17142A" stroke-width="3"/>
+          <path d="M176 74 v34" stroke="#17142A" stroke-width="2"/>
+          <path d="M164 80 q-20 -2 -34 -8" stroke="#17142A" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <path d="M188 80 q16 4 20 -6" stroke="#17142A" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <circle cx="214" cy="66" r="9" fill="none" stroke="#00A8E8" stroke-width="3.5"/>
+          <path d="M220 73 l8 9" stroke="#00A8E8" stroke-width="4" stroke-linecap="round"/>
+          <path d="M168 108 v18 M184 108 v18" stroke="#17142A" stroke-width="6" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div class="wc-name">검거자 : <b id="agentName">무명 탐정</b></div>
+      <div class="wc-meta">CASE 2026-0399 · <span id="clearDate"></span> · 체감 <b>22.0°</b> 복원</div>
+      <div id="rankBox" style="font-size:.76rem; line-height:1.55; background:#FFF9DE; border:2.5px dashed var(--ink); border-radius:12px; padding:7px 12px; margin:0 4px; text-align:left"></div>
+      <div class="capture-box">
+        <p class="cap">📸 <b>지금 이 화면을 캡처하세요!</b><br>캡처 화면을 <b>1층 데스크</b>에 보여주면<br>전리품 보물상자를 열 수 있습니다.</p>
+        <div class="code-line">
+          <span class="lbl">검거 확인 코드</span>
+          <div class="code" id="clearCode">COOL-0000</div>
+        </div>
       </div>
+      <button id="moreClues" class="btn" style="font-size:.92rem; padding:11px; max-width:320px; margin:0 auto" onclick="backToGame()">🔍 남은 단서 마저 찾기</button>
     </div>
   </section>
 
 </div>
 
-<!-- 층 시트 -->
 <div id="sheetVeil" onclick="if(event.target===this)closeSheet()"><div id="sheet"></div></div>
-<!-- 결과 모달 -->
-<div id="veil" onclick="if(event.target===this)closeModal()"><div id="modal"></div></div>
-<!-- 카메라 스캐너 -->
+<div id="veil" onclick="if(event.target===this)closeModal()"><div id="modal" class="sticker"></div></div>
 <div id="cam">
   <video id="camVideo" playsinline muted></video>
   <div id="camFrame"></div>
   <p id="camMsg">단서 스티커의 QR을 네모 안에 맞춰주세요</p>
   <div id="camHit">✓</div>
   <button id="camClose" onclick="closeScanner()">✕</button>
-  <div id="camStat" style="position:absolute; left:12px; top:calc(14px + env(safe-area-inset-top)); font-size:.62rem; color:#9fd8ff; background:rgba(0,0,0,.45); padding:4px 9px; border-radius:8px; line-height:1.5">SCAN v7</div>
+  <div id="camStat">SCAN v11</div>
+</div>
+<div id="chaseLoad">
+  <div class="cl-bubble" id="clBubble">못 잡을걸? 잡아봐라~! 🕶</div>
+  <div id="clScene"></div>
+  <div class="cl-catch" id="clCatch">덥석! 검거 완료 ❄️</div>
+  <div class="cl-load" id="clLoad">추격 중<i>…</i></div>
+  <div id="clBrief" class="sticker" style="display:none; max-width:300px; padding:20px 18px; text-align:center; margin:0 22px">
+    <span class="badge">MISSION</span>
+    <h3 style="font-family:'Bagel Fat One',cursive; font-size:1.12rem; margin:10px 0 7px; line-height:1.4">각 층에 숨겨진 ❄️<br>시원함의 조각을 찾아라!</h3>
+    <p style="font-size:.78rem; color:#544f66; line-height:1.65; margin-bottom:14px">층마다 <b>1개씩, 총 7개</b>를 되찾으면 도둑 검거!<br>단서 <b>22곳</b>을 전부 확인하면<br><b>명탐정</b>으로 이름이 남는다 👑</p>
+    <button class="btn" onclick="briefDone()" style="font-size:.98rem; padding:11px">수사 시작 🔍</button>
+  </div>
+  <div id="tapUI" style="display:none; position:absolute; left:0; right:0; bottom:11dvh; text-align:center; z-index:3">
+    <div style="width:min(70vw,260px); height:15px; border:3px solid var(--ink); border-radius:99px; background:#fff; margin:0 auto 12px; overflow:hidden"><div id="tapFill" style="height:100%; width:12%; background:repeating-linear-gradient(-45deg, var(--hot) 0 8px, #FF8AA2 8px 16px); transition:width .1s"></div></div>
+    <div style="font-family:'Bagel Fat One',cursive; font-size:1.15rem; color:var(--ink)">빠르게 연타해서 잡아라! 👆</div>
+  </div>
+  <div id="finalPiece">❄️</div>
 </div>
 <div id="toast"></div>
+<div id="frost"></div>
+<div id="regVeil" onclick="if(event.target===this)closeReg()">
+  <div id="regCard" class="sticker">
+    <span class="reg-tag">경청 수사대 · 인사기록</span>
+    <h2>수사관 등록</h2>
+    <p class="reg-sub">여름 도둑 사건을 담당할 탐정의 이름을 기록합니다</p>
+    <div class="reg-row">
+      <span class="reg-prefix">탐정</span>
+      <input id="codename" maxlength="8" placeholder="이름 입력" autocomplete="off">
+    </div>
+    <button class="btn" onclick="startGame()">등록 완료 — 수사 착수 🔍</button>
+  </div>
+</div>
 
 <script>
 /* jsQR v1.4.0 — 내장 인식 엔진 (외부 다운로드 불필요) */
@@ -435,114 +628,277 @@
 
 <script>
 /* =====================================================
-   여름 도둑을 잡아라 — 참가자용 (실전 QR 버전)
-   · 각 QR 스티커 = 배포 URL + ?c=코드  (예: ...?c=k3x9)
-     → 카메라 스캔 또는 QR 링크 접속 모두 자동 판정
-   · 1층부터 순차 해금 (보물을 찾아야 다음 층 오픈)
-   · 데모용 단서 버튼은 배포 시 SHOW_DEMO=false 로 숨김
-   · 토/일 보물 교체 : gem 값을 요일 분기로 변경
+   여름 도둑을 잡아라 v11 — 실제 장소 기반 단서 + 진행 저장
+   · QR 스티커 = 배포 URL + ?c=코드 / 카메라 스캔 병행
+   · 층별 QR 수 가변 (1층 5개 … 7층 1개), 장소명 노출
+   · localStorage 저장 — 새로고침/재접속에도 진행 유지
 ===================================================== */
-const SHOW_DEMO = false;  // 실전 버전 — 데모 단서 버튼 숨김 (테스트하려면 true)
+const SHOW_DEMO = false;  // 실전 배포용
+const SAVE_KEY = 'summerThief_v11';
 
 const FLOORS = [
  { no:1, name:"어울림터", zone:"북카페 · 다목적홀",
-   memo:"드디어 왔군, 탐정. 첫 단서는 쉽게 주지. 나는 향기로운 것들 곁에서 쉬다 갔다. 🌸",
-   gem:"k3x9",
+   memo:"훔친 0.1°C는 잘 있다. 나는 이 층을 한 바퀴 돌며 흔적을 남겼지 — 전부 찾아내는 자만이 '명탐정'이라 불릴 자격이 있다. 🕶",
+   gem:"b7q4",
    qrs:[
-     {c:"k3x9", icon:"💎", t:"gem", msg:"벌써 찾았다고? 초심자의 행운이겠지. 2층이 열렸다. 올라와 봐."},
-     {c:"m7q2", icon:"📖", t:"quote", h:"나 보기가 역겨워 가실 때에는 말없이 고이 보내 드리우리다 — 김소월, 「진달래꽃」", msg:"…이별 시나 읽고 있을 때가 아닐 텐데?"},
-     {c:"r4w8", icon:"💡", t:"tip", h:"1층 다목적홀은 전시·행사 공간으로 활용됩니다.", msg:"지금 이 보물찾기도 여기서 태어났지."},
-     {c:"t6p1", icon:"🗒", t:"note", h:"", msg:"데스크에 물어봐도 소용없어. 직원분들도 내가 어디 있는지 몰라 ㅋ"},
-     {c:"z2n5", icon:"🏃", t:"act", h:"손부채질 5번 하고 출발!", msg:"여기까지 오느라 더웠지? 준비운동이다."},
+     {c:"p3k7", loc:"쿠드카페", icon:"☕", t:"tip", h:"쿠드카페 — 시원한 음료와 함께 책을 즐길 수 있는 북카페예요.", msg:"아이스아메리카노… 도둑질은 목이 마르거든. 한 잔 하고 갔다."},
+     {c:"f8x2", loc:"쿠드꽃집", icon:"🌸", t:"tip", h:"쿠드꽃집 — 책과 함께 꽃·식물을 만날 수 있는 향기로운 공간이에요.", msg:"꽃향기에 취해 한참 쉬다 갔다. 도둑도 힐링이 필요하거든."},
+     {c:"d5m9", loc:"안내데스크", icon:"🙋", t:"tip", h:"안내데스크 — 시설 이용·행사 안내는 뭐든 여기서 물어보세요.", msg:"직원분들께 내 행방을 물어봐도 소용없어. 나는 변장의 달인이거든."},
+     {c:"c2r6", loc:"주차등록기", icon:"🚗", t:"tip", h:"방문 시 주차등록기에 차량을 등록하면 주차 지원을 받을 수 있어요.", msg:"도주 차량도 주차 등록해야 하나… 잠시 고민했다."},
+     {c:"b7q4", loc:"신간서적존", icon:"❄️", t:"gem", h:"신간서적존 — 따끈따끈한 새 책이 가장 먼저 놓이는 자리!", msg:"새 책 냄새에 홀려 있다가 들켰군! 왼쪽 계단을 따라 2층으로 올라와 봐."},
    ]},
- { no:2, name:"도서관", zone:"사람도서관 · 열람실 🤫",
-   memo:"쉿. 이 층에선 조용히 움직여. 나는 '사람이 책이 되는 곳'이 신기해서 구경하다 갔다.",
-   gem:"b8f3",
+ { no:2, name:"사람배움터", zone:"디지털열람실 · 사람도서관 🤫",
+   memo:"쉿, 여긴 조용히 움직여. 사서님 눈을 피해 곳곳에 흔적을 남겼다. 조용히, 그러나 빠짐없이 찾아봐. 🤫",
+   gem:"h9p5",
    qrs:[
-     {c:"h5j7", icon:"📖", t:"quote", h:"죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를 — 윤동주, 「서시」", msg:"…나도 시원함을 훔친 게 좀 부끄럽긴 해."},
-     {c:"b8f3", icon:"💎", t:"gem", msg:"조용히 잘 찾아냈군. 사서보다 낫네. 3층이 열렸다."},
-     {c:"w2d9", icon:"💡", t:"tip", h:"디지털열람실에서는 전자자료를 이용할 수 있습니다.", msg:"도둑 잡다가 지치면 여기서 쉬어가."},
-     {c:"p4s6", icon:"🗒", t:"note", h:"", msg:"열람실에서 공부하는 사람들 방해하면 못써. 나는 매너 있는 도둑이거든."},
-     {c:"g1v8", icon:"📖", t:"quote", h:"님은 갔지마는 나는 님을 보내지 아니하였습니다 — 한용운, 「님의 침묵」", msg:"시원함은 갔지만… 네가 되찾으면 되지."},
+     {c:"e4t8", loc:"디지털열람실", icon:"💻", t:"tip", h:"디지털열람실 — 전자자료와 인터넷을 무료로 이용할 수 있어요.", msg:"검색 기록: '시원함 숨기기 좋은 곳'. …걱정 마, 기록은 지웠다."},
+     {c:"s6w3", loc:"도서검색기", icon:"🔍", t:"tip", h:"도서검색기 — 찾는 책의 위치를 바로 알려줘요.", msg:"'여름 도둑'을 검색해 봐. 검색 결과 없음 — 완전 범죄지."},
+     {c:"h9p5", loc:"사람도서관", icon:"❄️", t:"gem", h:"사람도서관 — 사람이 책이 되어 자신의 경험과 이야기를 들려주는 특별한 프로그램!", msg:"사람이 책이 되는 곳까지 찾아내다니, 사서보다 낫네. 3층이 열렸다 — 엘리베이터를 타고 올라와라."},
+     {c:"o1z7", loc:"홍보게시판", icon:"📌", t:"tip", h:"홍보게시판 — 경청지놀의 행사·프로그램 소식이 모이는 곳.", msg:"내 수배 포스터도 붙었더라. 실물이 훨씬 잘생겼는데 말이지."},
    ]},
- { no:3, name:"지식놀이터", zone:"스터디카페 · 컨셉형 열람실",
-   memo:"칠월의 나는 잘 익은 과일 같은 존재지. 여름이 열리는 서가에서 나를 찾아봐. 🍇",
-   gem:"q9m4",
+ { no:3, name:"지식놀이터", zone:"그룹룸 · 컨셉형 열람실",
+   memo:"'시원함이란 무엇인가'… 생각이 많아지는 층이다. 내 흔적을 하나씩 따라오다 보면 답이 보일지도. 🤔",
+   gem:"y5v9",
    qrs:[
-     {c:"x3c7", icon:"📖", t:"quote", h:"내 고장 칠월은 청포도가 익어가는 시절 — 이육사, 「청포도」", msg:"힌트는 줬는데 여긴 아니야 ㅋ"},
-     {c:"n6t2", icon:"📖", t:"quote", h:"넓은 벌 동쪽 끝으로 옛이야기 지줄대는 실개천이 휘돌아 나가고 — 정지용, 「향수」", msg:"시원한 실개천… 부럽다."},
-     {c:"q9m4", icon:"💎", t:"gem", msg:"청포도 힌트를 알아듣다니, 책 좀 읽는 타입이군. 4층이 열렸다."},
-     {c:"d7k1", icon:"💡", t:"tip", h:"그룹룸은 모임·스터디 공간입니다.", msg:"친구들이랑 나를 잡을 작전 회의하기 딱 좋지."},
-     {c:"f2r5", icon:"🏃", t:"act", h:"목 스트레칭 좌우 3번.", msg:"공부하던 사람처럼 자연스럽게."},
+     {c:"g3u6", loc:"그룹룸", icon:"👥", t:"tip", h:"그룹룸 — 스터디·모임을 위한 예약제 공간이에요.", msg:"나를 잡을 작전회의는 여기서 하도록. 예약은 필수다."},
+     {c:"r8n2", loc:"컨셉형 열람실", icon:"🛋", t:"tip", h:"컨셉형 열람실 — 스터디카페처럼 분리된 나만의 공간에서 집중해서 공부할 수 있어요!", msg:"여기 앉으면 공부가 잘 될 것 같은 착각이 든다. …착각 아님, 진짜 잘 됨."},
+     {c:"y5v9", loc:"추천도서 서가", icon:"❄️", t:"gem", h:"추천도서 서가 — 사서가 엄선한 이달의 추천 도서를 만날 수 있어요.", msg:"'시원함이란 무엇인가'… 답을 찾기도 전에 들켰군. 4층이 열렸다."},
    ]},
- { no:4, name:"창의놀이터", zone:"북캠핑존 · 만화 · 미디어",
-   memo:"이 건물에서 제일 마음에 든 곳. 텐트 안은 생각보다 시원하더라고. ⛺",
-   gem:"j5w9",
+ { no:4, name:"창의놀이터", zone:"북캠핑존 · 웹툰 · 미디어",
+   memo:"이 건물에서 제일 놀기 좋은 층이다. 정신없이 노느라 흔적을 잔뜩 흘리고 다녔지. 전부 주워 봐라. 🎪",
+   gem:"a9f3",
    qrs:[
-     {c:"s8b4", icon:"🎨", t:"note", h:"(만화 컷 스타일 낙서)", msg:"주인공은 항상 4층에서 각성하지. …근데 난 여기 없음 ㅅㄱ"},
-     {c:"j5w9", icon:"💎", t:"gem", msg:"내 아지트를 찾아내다니! 여기 만화책 맛집인 거 알지? 5층이 열렸다."},
-     {c:"v1n7", icon:"💡", t:"tip", h:"미디어스튜디오에서 촬영·크리에이터 활동이 가능합니다.", msg:"나를 잡는 순간을 브이로그로 남겨보든가."},
-     {c:"c6g3", icon:"🗒", t:"note", h:"", msg:"동아리실에서 '여름도둑 팬클럽' 만들 사람 구함. …없겠지."},
-     {c:"y4h8", icon:"🏃", t:"act", h:"가장 좋아하는 만화 주인공 포즈 3초 유지.", msg:"아무도 안 보는 거 확인하고."},
+     {c:"t2j8", loc:"북캠핑존", icon:"⛺", t:"tip", h:"북캠핑존 — 벤치에 앉아 캠핑 온 기분으로 책을 즐기는 이색 공간!", msg:"내 아지트다. 벤치에 앉아 있으면 진짜 캠핑 온 기분이거든. 떠나기 싫었다."},
+     {c:"w7c4", loc:"웹툰서가", icon:"📖", t:"tip", h:"웹툰서가 — 만화·웹툰 단행본이 가득!", msg:"정주행하다 하루가 통째로 사라졌다. 도둑에게도 위험한 곳."},
+     {c:"a9f3", loc:"AI 화상면접실", icon:"❄️", t:"gem", h:"AI 화상면접실 — 인공지능과 면접 연습을 할 수 있어요.", msg:"AI가 예언했다… '당신은 곧 잡힙니다'. 그 말이 맞았군. 5층이 열렸다!"},
+     {c:"l4s1", loc:"동아리실", icon:"🎪", t:"tip", h:"동아리실 — 청년 동아리 활동을 위한 공간이에요.", msg:"'여름도둑 팬클럽' 창립 멤버 모집 중. 현재 0명."},
    ]},
- { no:5, name:"건강배움터", zone:"헬스장 · 필라테스 · 힐링정원",
-   memo:"여기부터는 체력전이다. 나는 운동을 마치고 초록빛 속에서 땀을 식혔지. 🌿",
-   gem:"u2e6",
+ { no:5, name:"건강배움터", zone:"헬스장 · 필라테스",
+   memo:"여기부턴 체력전이다. 나도 숨이 차서 흔적을 흘리며 다녔거든. 운동한다 생각하고 샅샅이 뛰어라. 💪",
+   gem:"m3h8",
    qrs:[
-     {c:"l9a3", icon:"💪", t:"note", h:"도둑의 운동일지 Day 1", msg:"시원함을 지키려면 체력이 필요하다. 오늘 스쿼트 100개. 내일 못 일어날 듯."},
-     {c:"o5i8", icon:"💡", t:"tip", h:"경산시 거주자·경산 소재 학교 재학생은 체육시설 할인 혜택이 있습니다.", msg:"도둑인 나도 이건 인정."},
-     {c:"u2e6", icon:"💎", t:"gem", msg:"정원까지 쫓아오다니, 끈질기네. 6층이 열렸다. 슬슬 무서워지려 해."},
-     {c:"e7y1", icon:"🏆", t:"quote", h:"나는 선수 생활 동안 9,000개 이상의 슛을 놓쳤다 — 마이클 조던", msg:"실패해도 계속 찍어봐. 보물은 어딘가에 있으니."},
-     {c:"a3o9", icon:"🏃", t:"act", h:"제자리 스쿼트 3개.", msg:"나처럼 100개는 하지 말고."},
+     {c:"x6y2", loc:"필라테스·요가실", icon:"🧘", t:"tip", h:"필라테스·요가실 — 전문 강사와 함께하는 운동 프로그램이 열리는 곳이에요.", msg:"다운독 자세로 숨는 연습을 했다. …근육통만 얻었다."},
+     {c:"m3h8", loc:"헬스장 유리창", icon:"❄️", t:"gem", h:"헬스장 전체가 한눈에 보이는 유리창 — 경산 시민·재학생은 할인 혜택이 있어요!", msg:"구경만 해도 운동한 기분이 드는 명당인데… 들켰군. 6층이 열렸다."},
    ]},
  { no:6, name:"청년놀이터", zone:"U-SPORTS ZONE",
-   memo:"홈런타자가 되는 곳으로 오게! 나는 거기서 3연속 헛스윙하고 도망쳤다. ⚾",
-   gem:"i8p2",
+   memo:"홈런의 성지에서 나는 3연속 헛스윙을 기록했다. 그 치욕의 흔적들을 하나도 빠짐없이 목격하고 와라. ⚾",
+   gem:"z8b4",
    qrs:[
-     {c:"i8p2", icon:"💎", t:"gem", msg:"헛스윙의 아픔이 남은 곳을 찾아냈군… 잔인한 녀석. 7층, 마지막이다."},
-     {c:"r6u4", icon:"💪", t:"note", h:"도둑의 운동일지 Day 2", msg:"스크린야구 도전. 타율 0할. 시원함을 훔치는 재능과 야구 재능은 별개인 듯."},
-     {c:"k1z7", icon:"💡", t:"tip", h:"U-SPORTS ZONE에서는 실내에서 ICT 스포츠를 즐길 수 있습니다.", msg:"이 더위에 실내 스포츠 — 이게 진짜 피서지."},
-     {c:"m4x6", icon:"🏆", t:"quote", h:"삼진을 두려워하다가는 아무것도 할 수 없다 — 베이브 루스", msg:"나도 두려움 없이 시원함을 훔쳤지. …미안."},
-     {c:"t9q3", icon:"🏃", t:"act", h:"풀스윙 자세 1회.", msg:"방망이는 상상으로."},
+     {c:"k5d7", loc:"결제 키오스크", icon:"🎫", t:"tip", h:"U-SPORTS ZONE 이용권은 키오스크에서 결제할 수 있어요.", msg:"도둑도 결제는 정직하게 한다. 현금영수증도 챙겼다."},
+     {c:"v2g9", loc:"레이싱카 존", icon:"🏎", t:"tip", h:"레이싱카 존 — 실내에서 즐기는 레이싱 시뮬레이터!", msg:"도주 연습 겸 한 판 했다가 벽에 박았다. 기록 삭제를 요청한다."},
+     {c:"z8b4", loc:"야구존", icon:"❄️", t:"gem", h:"야구존 — 스크린 야구로 실내에서 시원하게 타격 연습!", msg:"치욕의 현장까지 쫓아오다니… 잔인한 녀석. 7층, 마지막이다."},
    ]},
- { no:7, name:"다목적 체육관", zone:"최종 결전",
-   memo:"여기까지 온 건 네가 처음이다. 가장 넓고, 함성이 울리는 곳. 거기서 기다리지.",
-   gem:"w7l5",
+ { no:7, name:"다목적 체육관", zone:"최후의 결전",
+   memo:"여기가 끝이다, 탐정. 가장 넓고 함성이 울리는 곳 — 체육관 문 앞에서 최후의 승부를 내자.",
+   gem:"q7w1",
    qrs:[
-     {c:"z5f9", icon:"💪", t:"note", h:"도둑의 운동일지 — 최종화", msg:"도망 다니느라 하루 계단 왕복 20번. 이 건물, 나를 건강하게 만들었다."},
-     {c:"w7l5", icon:"💎", t:"gem", msg:"잡혔다… 완패다. 훔친 시원함, 전부 돌려주지. 1층 데스크로 가서 전리품을 받아 가!"},
-     {c:"b3j6", icon:"💡", t:"tip", h:"7층 다목적체육관은 체육시설이자 가변형 문화공연 공간으로도 활용됩니다.", msg:"다음엔 공연 보러 와."},
-     {c:"n8d2", icon:"🏆", t:"quote", h:"고통 없이는 얻는 것도 없다 (No pain, no gain)", msg:"7층까지 계단으로 왔다면 인정. 엘리베이터 탔어도 인정."},
-     {c:"h2s4", icon:"🏃", t:"act", h:"만세 3번!", msg:"곧 우승자가 될 테니 미리 연습."},
+     {c:"q7w1", loc:"다목적 체육관 앞", icon:"❄️", t:"gem", h:"다목적 체육관 — 체육시설이자 공연·행사가 열리는 가변형 문화 공간이에요.", msg:"잡혔다… 완패다! 훔친 0.1°C, 전부 돌려주지. 1층 데스크로 가서 전리품을 받아라!"},
    ]},
 ];
 
-const TEMPS = [39.9, 37.3, 34.8, 32.2, 29.7, 27.1, 24.6, 22.0];
-const state = { found:new Set(), scanned:new Set(), unlocked:1 };
-let openFloorNo = null;
+const THIEF_MINI = `<svg viewBox="0 0 60 64" width="26" height="27" aria-label="여름 도둑"><circle cx="30" cy="9" r="4.5" fill="#fff" stroke="#17142A" stroke-width="2"/><circle cx="30" cy="37" r="17" fill="#FFDFB8" stroke="#17142A" stroke-width="2.5"/><path d="M14 33 q1 -16 16 -16 q15 0 16 16 l-1 3 h-30 z" fill="#FF4D6D" stroke="#17142A" stroke-width="2.5"/><rect x="13" y="32" width="34" height="6" rx="3" fill="#D93A58" stroke="#17142A" stroke-width="2"/><rect x="16" y="38" width="28" height="10" rx="5" fill="#17142A"/><circle cx="24" cy="43" r="3.1" fill="#fff"/><circle cx="36" cy="43" r="3.1" fill="#fff"/><circle cx="24.8" cy="43.5" r="1.4" fill="#17142A"/><circle cx="36.8" cy="43.5" r="1.4" fill="#17142A"/><circle cx="25.8" cy="41.8" r=".8" fill="#fff"/><circle cx="37.8" cy="41.8" r=".8" fill="#fff"/><ellipse cx="19" cy="50" rx="2.6" ry="1.6" fill="#FF9DB2" opacity=".8"/><ellipse cx="41" cy="50" rx="2.6" ry="1.6" fill="#FF9DB2" opacity=".8"/><path d="M25 51 q5 3.5 10 0" fill="none" stroke="#17142A" stroke-width="2" stroke-linecap="round"/><path d="M49 29 q3.5 4.5 0 7.5 q-3.5 -3 0 -7.5" fill="#7FD4FF"/></svg>`;
 
+const TOTAL_QR = FLOORS.reduce((a,f)=>a+f.qrs.length,0);
+const TEMPS = [39.9, 37.3, 34.8, 32.2, 29.7, 27.1, 24.6, 22.0];
+
+/* ---------- 저장/복원 ---------- */
+const state = { found:new Set(), scanned:new Set(), unlocked:1, codename:'', clearCode:'' };
+function saveState(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({
+    found:[...state.found], scanned:[...state.scanned],
+    unlocked:state.unlocked, codename:state.codename, clearCode:state.clearCode
+  })); }catch(e){}
+}
+function loadState(){
+  try{
+    const d = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(!d || !d.codename) return false;
+    state.found = new Set(d.found||[]);
+    state.scanned = new Set(d.scanned||[]);
+    state.unlocked = d.unlocked||1;
+    state.codename = d.codename;
+    state.clearCode = d.clearCode||'';
+    return true;
+  }catch(e){ return false; }
+}
+function resetGame(){
+  if(!confirm('정말 처음부터 다시 시작할까요? 진행 기록이 모두 사라집니다.')) return;
+  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+  location.href = location.pathname;
+}
+
+/* ---------- 효과음 ---------- */
+let sndOn = true, AC = null;
+function toggleSnd(){ sndOn = !sndOn; document.getElementById('snd').textContent = sndOn ? '🔊' : '🔇'; }
+function tone(f, dur=.12, type='triangle', vol=.16, delay=0){
+  if(!sndOn) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const t = AC.currentTime + delay;
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(.001, t + dur);
+    o.connect(g); g.connect(AC.destination);
+    o.start(t); o.stop(t + dur);
+  }catch(e){}
+}
+const sfx = {
+  tap:   ()=>tone(660,.05,'square',.06),
+  paper: ()=>{ tone(300,.05,'square',.08); tone(210,.06,'square',.06,.05); },
+  stamp: ()=>{ tone(95,.14,'square',.3); tone(60,.2,'sawtooth',.2,.02); },
+  ice:   ()=>{ [880,1174,1568].forEach((f,i)=>tone(f,.3,'triangle',.12,i*.08)); },
+  clear: ()=>{ [523,659,784,1046,1318].forEach((f,i)=>tone(f,.4,'triangle',.14,i*.11)); },
+};
+let openFloorNo = null, pendingCode = null;
+
+function openReg(){
+  document.getElementById('regVeil').classList.add('show');
+  setTimeout(()=>{ try{document.getElementById('codename').focus();}catch(e){} }, 350);
+}
+function closeReg(){ document.getElementById('regVeil').classList.remove('show'); }
 function startGame(){
+  const cn = document.getElementById('codename');
+  state.codename = (cn && cn.value.trim()) ? cn.value.trim() : 'OO';
+  saveState();
+  closeReg();
+  playChase('run', ()=>{
+    enterGame();
+    if(pendingCode){ const c = pendingCode; pendingCode = null; setTimeout(()=>scan(c), 400); }
+  });
+}
+function playChase(mode, done){
+  const o = document.getElementById('chaseLoad');
+  const scene = document.getElementById('clScene');
+  const src = document.querySelector('.chase svg');
+  scene.innerHTML = src ? src.outerHTML : '';
+  document.getElementById('clBubble').style.display = mode==='run' ? 'block' : 'none';
+  document.getElementById('clLoad').style.display = mode==='run' ? 'block' : 'none';
+  const c = document.getElementById('clCatch');
+  c.style.display = mode==='catchM' ? 'block' : 'none';
+  c.classList.remove('go');
+  o.className = 'show ' + mode;
+  if(mode==='run'){ tone(740,.09,'square',.1); tone(740,.09,'square',.1,.14); }
+  if(mode==='catchM'){
+    setTimeout(()=>{
+      o.classList.add('stopped');
+      c.classList.add('go');
+      sfx.stamp(); setTimeout(sfx.ice, 250);
+      snowBurst(14);
+    }, 1300);
+  }
+  if(mode==='run'){
+    document.getElementById('clBrief').style.display='none';
+    setTimeout(()=>{
+      scene.innerHTML='';
+      document.getElementById('clLoad').style.display='none';
+      document.getElementById('clBubble').style.display='none';
+      document.getElementById('clBrief').style.display='block';
+      sfx.paper();
+      playChase._done = done;
+    }, 2600);
+  } else {
+    setTimeout(()=>{ o.className=''; scene.innerHTML=''; done && done(); }, 3000);
+  }
+}
+let tapP=0, tapTimer=null, tapDone=null, copInner=null;
+function playCatchGame(done){
+  const o = document.getElementById('chaseLoad');
+  const scene = document.getElementById('clScene');
+  const src = document.querySelector('.chase svg');
+  scene.innerHTML = src ? src.outerHTML : '';
+  ['clBubble','clLoad','clBrief'].forEach(id=>document.getElementById(id).style.display='none');
+  const c = document.getElementById('clCatch');
+  c.style.display='none'; c.classList.remove('go');
+  document.getElementById('finalPiece').classList.remove('go');
+  o.className = 'show catchM';
+  copInner = scene.querySelector('.copRun > g');
+  tapP = 0.12; tapDone = done;
+  applyGap();
+  document.getElementById('tapUI').style.display='block';
+  clearInterval(tapTimer);
+  tapTimer = setInterval(()=>{ if(tapP < 1){ tapP = Math.max(0.04, tapP - 0.007); applyGap(); } }, 80);
+  o.onpointerdown = ()=>{
+    if(tapP >= 1) return;
+    tapP += 0.055; sfx.tap();
+    try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){}
+    applyGap();
+    if(tapP >= 1) caughtThief();
+  };
+}
+function applyGap(){
+  document.getElementById('tapFill').style.width = Math.min(tapP,1)*100 + '%';
+  if(copInner) copInner.setAttribute('transform', 'translate(' + (18 + (-45 + Math.min(tapP,1)*140)) + ',22) rotate(5 75 100) scale(.9)');
+}
+function caughtThief(){
+  clearInterval(tapTimer);
+  const o = document.getElementById('chaseLoad');
+  o.onpointerdown = null;
+  o.classList.add('stopped');
+  document.getElementById('tapUI').style.display='none';
+  const c = document.getElementById('clCatch');
+  c.textContent = '잡았다!! 🚨';
+  c.style.display='block'; c.classList.add('go');
+  sfx.stamp(); setTimeout(sfx.ice, 250); snowBurst(16);
+  setTimeout(()=>{ document.getElementById('finalPiece').classList.add('go'); sfx.clear(); }, 750);
+  setTimeout(()=>{
+    const fl = document.createElement('div');
+    fl.style.cssText = 'position:fixed; inset:0; z-index:160; background:radial-gradient(circle, #fff 0%, #BFE9FF 45%, rgba(191,233,255,0) 78%); opacity:0; pointer-events:none';
+    document.body.appendChild(fl);
+    fl.animate([
+      {opacity:0, transform:'scale(.25)'},
+      {opacity:1, transform:'scale(1.4)', offset:.45},
+      {opacity:0, transform:'scale(2.4)'}
+    ], {duration:900, easing:'ease-out'}).onfinish = ()=>fl.remove();
+    sfx.ice();
+  }, 2500);
+  setTimeout(()=>{
+    o.className=''; document.getElementById('clScene').innerHTML='';
+    document.getElementById('finalPiece').classList.remove('go');
+    tapDone && tapDone();
+  }, 3050);
+}
+function briefDone(){
+  sfx.tap();
+  document.getElementById('chaseLoad').className='';
+  document.getElementById('clBrief').style.display='none';
+  playChase._done && playChase._done();
+}
+function enterGame(){
   document.getElementById('intro').style.display='none';
   document.getElementById('game').style.display='flex';
   renderFloors();
+  updateTemp(false);
 }
 
-/* ---------- 층 목록 : 순차 해금 ---------- */
+/* ---------- 층 목록 ---------- */
 function renderFloors(){
   const wrap = document.getElementById('floors');
   wrap.innerHTML = [...FLOORS].reverse().map(f=>{
     const done = state.found.has(f.no);
     const locked = f.no > state.unlocked;
     const current = f.no === state.unlocked && !done;
+    const seen = f.qrs.filter(q=>state.scanned.has(q.c)).length;
     return `
     <button class="floor ${done?'done':''} ${locked?'locked':''} ${current?'current':''}" onclick="tryOpen(${f.no})">
       <span class="fnum">${f.no}F</span>
-      <span><span class="fname">${f.name}</span><br><span class="fzone">${locked?'???':f.zone}</span></span>
-      <span class="fstate">${done?'❄️':(locked?'🔒':'🔥')}</span>
+      <span class="fmid"><span class="fname">${f.name}</span><span class="fzone">${locked?'???':f.zone}</span></span>
+      <span class="fright">
+        ${current?`<span class="thiefMini">${THIEF_MINI}</span>`:''}
+        ${!locked?`<span class="fcount">${seen}/${f.qrs.length}</span>`:''}
+        <span class="fstate">${done?'❄️':(locked?'🔒':'🔥')}</span>
+      </span>
     </button>`;
   }).join('');
+  const cc = document.getElementById('clueCt');
+  if(cc) cc.textContent = '🔍 단서 ' + state.scanned.size + '/' + TOTAL_QR;
+  const hl = document.getElementById('hintLine');
+  if(hl) hl.innerHTML = state.found.size>=7
+    ? '👑 검거 완료! 단서를 전부 모으면 명탐정 — <u onclick="showClear()" style="cursor:pointer; color:var(--hot)">검거 보고서 보기</u>'
+    : '1층부터 차례로! 도둑은 지금 반짝이는 층에 있다 👀';
 }
 function tryOpen(no){
+  sfx.tap();
   if(no > state.unlocked){
     toast(`🔒 아직 잠겨 있다 — 먼저 ${state.unlocked}층의 보물을 찾아라!`);
     return;
@@ -554,30 +910,31 @@ function tryOpen(no){
 function openSheet(no){
   openFloorNo = no;
   const f = FLOORS.find(x=>x.no===no);
-  const done = state.found.has(no);
+  const single = f.qrs.length===1;
   document.getElementById('sheet').innerHTML = `
     <div class="s-head">
       <span class="fnum">${f.no}F</span>
       <span><span class="s-title">${f.name}</span><br><span class="s-zone">${f.zone}</span></span>
+      <span class="ev-tag">EVIDENCE #0${f.no}</span>
       <button class="close" onclick="closeSheet()">✕</button>
     </div>
     <div class="memo"><span class="who">— 여름 도둑이 남긴 메모</span>${f.memo}</div>
     <button class="scanBtn" onclick="openScanner()">📷 단서 QR 스캔</button>
-    <div class="slot-head"><span>이 층의 단서 5개 — 하나만 진짜 보물</span><b>${f.qrs.filter(q=>state.scanned.has(q.c)).length} / 5 확인</b></div>
-    <div class="slots">
-      ${f.qrs.map((q,i)=>{
+    <div class="slot-head"><span>${single?'이 층의 단서는 단 하나 — 최후의 결전':`단서 ${f.qrs.length}곳 — 전부 모으면 명탐정 승급!`}</span><b>${f.qrs.filter(q=>state.scanned.has(q.c)).length} / ${f.qrs.length}</b></div>
+    <div class="slots ${single?'single':''}">
+      ${f.qrs.map(q=>{
         const seen = state.scanned.has(q.c);
         const isGem = q.t==='gem';
         const cls = seen ? (isGem?'gem':'seen') : 'todo';
         const clickable = seen || SHOW_DEMO;
         return `<button class="slot ${cls}" ${clickable?`onclick="scan('${q.c}')"`:'disabled'}>
-          <span class="s-ic">${seen?(isGem?'💎':q.icon):'?'}</span>
-          <b>단서 ${i+1}</b>
-          <span class="s-sub">${seen?(isGem?'보물!':'확인함'):'미발견'}</span>
+          <span class="s-ic">${seen?(isGem?'❄️':q.icon):'📍'}</span>
+          <b>${q.loc}</b>
+          <span class="s-sub">${seen?(isGem?'보물 발견!':'확인함'):'미확인'}</span>
         </button>`;
       }).join('')}
     </div>
-    <div class="qr-note">${SHOW_DEMO?'데모 모드 — 미발견 단서도 눌러서 스캔 시뮬레이션 가능':'확인한 단서는 눌러서 다시 볼 수 있어요'}</div>
+    <div class="qr-note">${SHOW_DEMO?'데모 모드 — 장소를 눌러 스캔 시뮬레이션':'확인한 단서는 눌러서 다시 볼 수 있어요'}</div>
   `;
   document.getElementById('sheetVeil').classList.add('show');
 }
@@ -603,26 +960,52 @@ function scan(code){
     if(isNew){
       state.found.add(floor.no);
       state.unlocked = Math.max(state.unlocked, floor.no+1);
-      updateTemp();
+      updateTemp(true);
     }
+    saveState();
+    if(!already && state.found.size>=7 && floor.no===7){
+      sfx.stamp();
+      closeSheet();
+      renderFloors();
+      setTimeout(()=>playCatchGame(showClear), 450);
+      return;
+    }
+    if(already){
+      sfx.paper();
+      showModal(`
+      <div class="icon">❄️</div>
+      <div class="m-loc">📍 ${qr.loc}</div>
+      <h2>이미 되찾은 조각!</h2>
+      <div class="thief">그건 벌써 네가 가져갔잖아, 탐정. 아직 못 찾은 단서나 마저 찾아보시지.</div>
+      <button class="btn" onclick="closeModal()">계속 추리한다</button>`);
+      renderFloors();
+      if(openFloorNo===floor.no) openSheet(floor.no);
+      return;
+    }
+    sfx.stamp(); setTimeout(sfx.ice, 350);
     showModal(`
-      ${already?'<div class="again">🔁 이미 찾은 보물</div>':''}
-      <div class="icon">💎</div>
+      <div class="stampSeal">확 보</div>
+      <div class="icon">❄️</div>
+      <div class="m-loc">📍 ${qr.loc}</div>
       <h2>보물 발견! — ${floor.no}층 클리어</h2>
       <div class="drop">−2.5°<small>시원함의 조각을 되찾았다</small></div>
+      ${qr.h?`<div class="quote"><b>이곳에서 할 수 있는 것</b><br>${qr.h}</div>`:''}
       <div class="thief">${qr.msg}</div>
-      <button class="btn" onclick="closeModal()">${state.found.size>=7?'검거 완료 보고 →':'다음 층으로'}</button>
+      <button class="btn" onclick="${state.found.size>=7?'closeModal();showClear()':'closeModal();flyPiece()'}">${state.found.size>=7?'검거 완료 보고 →':'다음 층으로'}</button>
     `);
-    if(state.found.size>=7) setTimeout(showClear, 900);
   } else {
-    const titles = {quote:'단서 — 지식의 조각', note:'단서 — 도둑의 흔적', tip:'단서 — 이 건물의 비밀', act:'단서 — 긴급 미션'};
+    saveState();
+    sfx.paper();
     showModal(`
       ${already?'<div class="again">🔁 이미 확인한 단서</div>':''}
       <div class="icon">${qr.icon}</div>
-      <h2>${titles[qr.t]||'단서'}</h2>
-      ${qr.h?`<div class="quote">${qr.h}</div>`:''}
+      <div class="m-loc">📍 ${qr.loc}</div>
+      <h2>여긴 보물이 없다… 하지만!</h2>
+      ${qr.h?`<div class="quote"><b>이곳에서 할 수 있는 것</b><br>${qr.h}</div>`:''}
       <div class="thief">${qr.msg}</div>
-      <button class="btn" onclick="closeModal()">계속 추리한다</button>
+      ${(state.found.size>=7 && state.scanned.size>=TOTAL_QR)
+        ? '<button class="btn" onclick="closeModal();showClear()">👑 단서 완집 — 명탐정 승급!</button>'
+        : '<button class="btn" onclick="closeModal()">계속 추리한다</button>'}
     `);
   }
   renderFloors();
@@ -643,12 +1026,12 @@ async function openScanner(){
     await video.play();
     msg.textContent = '단서 스티커의 QR을 네모 안에 맞춰주세요';
     scanning = true;
-    await ensureJsQR();                 /* jsQR + 내장 인식기 병행 */
+    await ensureJsQR();
     if('BarcodeDetector' in window){
       try{ detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){ detector=null; }
     }
     document.getElementById('camStat').textContent =
-      'SCAN v7 · jsQR ' + (window.jsQR ? 'OK' : 'X') + ' · 내장 ' + (detector ? 'OK' : 'X');
+      'SCAN v11 · jsQR ' + (window.jsQR ? 'OK' : 'X') + ' · 내장 ' + (detector ? 'OK' : 'X');
     if(!window.jsQR && !detector){
       msg.innerHTML = '⚠ 인식 엔진을 불러오지 못했어요 (네트워크 확인 후 다시 열어주세요)<br>이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍으면 똑같이 작동합니다';
       return;
@@ -667,7 +1050,7 @@ function ensureJsQR(){
     s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
     s.onload=res; s.onerror=res;
     document.head.appendChild(s);
-    setTimeout(res, 5000);   /* 5초 안에 못 받으면 진행 (아래에서 안내) */
+    setTimeout(res, 5000);
   });
 }
 let lastDetect = 0, scanStartedAt = 0, tick = 0;
@@ -676,7 +1059,7 @@ async function scanLoop(){
   const video = document.getElementById('camVideo');
   const now = performance.now();
   if(scanStartedAt && now - scanStartedAt > 6000){
-    document.getElementById('camMsg').innerHTML = '인식이 어려우면 QR을 네모에 꽉 차게, 화면 QR이라면 밝기를 최대로!<br>또는 이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍어도 똑같이 작동해요';
+    document.getElementById('camMsg').innerHTML = '인식이 어려우면 QR을 네모에 꽉 차게!<br>또는 이 창을 닫고 <b>폰 기본 카메라</b>로 스티커를 직접 찍어도 똑같이 작동해요';
   }
   if(now - lastDetect > 180 && video.readyState >= 2 && video.videoWidth > 0){
     lastDetect = now; tick++;
@@ -686,27 +1069,23 @@ async function scanLoop(){
     }
     let raw = null;
     try{
-      /* 1차: 기기 내장 인식기 (지원 기기에서 가장 강력) */
       if(detector){
         try{
           const codes = await detector.detect(video);
           if(codes.length) raw = codes[0].rawValue;
         }catch(e){}
       }
-      /* 2차: jsQR — 안내 프레임 중앙부를 고해상도로 잘라 판독 */
       if(!raw && window.jsQR){
         const cv = scanLoop._cv || (scanLoop._cv = document.createElement('canvas'));
         const ctx = cv.getContext('2d', {willReadFrequently:true});
         const vw = video.videoWidth, vh = video.videoHeight;
         let d, w, h;
         if(tick % 3 !== 0){
-          /* 중앙 크롭(프레임 영역) → QR이 판독면을 꽉 채움 */
           const side = Math.floor(Math.min(vw, vh) * 0.74);
           const sx = (vw - side) / 2, sy = (vh - side) / 2;
           w = h = 540; cv.width = w; cv.height = h;
           ctx.drawImage(video, sx, sy, side, side, 0, 0, w, h);
         } else {
-          /* 3번에 1번은 전체 화면 판독 (프레임 밖 QR 대비) */
           w = 720; h = Math.round(720 * vh / vw) || 720;
           cv.width = w; cv.height = h;
           ctx.drawImage(video, 0, 0, w, h);
@@ -742,7 +1121,7 @@ function extractCode(raw){
     const u = new URL(raw);
     const c = u.searchParams.get('c');
     if(c) return c.toLowerCase();
-    return '__start__';   /* 링크인데 코드가 없음 = 시작 QR */
+    return '__start__';
   }catch(e){}
   if(/^[a-z0-9]{3,8}$/i.test(raw.trim())) return raw.trim().toLowerCase();
   return null;
@@ -754,6 +1133,29 @@ function closeScanner(){
   document.getElementById('cam').classList.remove('show');
 }
 
+function flyPiece(){
+  const flake = document.getElementById('flake');
+  if(!flake) return;
+  const r = flake.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.textContent = '❄️';
+  el.style.cssText = 'position:fixed; left:50%; top:50%; z-index:150; font-size:2.6rem; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 0 12px rgba(0,168,232,.9))';
+  document.body.appendChild(el);
+  const dx = (r.left + r.width/2) - innerWidth/2;
+  const dy = (r.top + r.height/2) - innerHeight/2;
+  el.animate([
+    {transform:'translate(-50%,-50%) scale(1.5) rotate(0deg)', opacity:1},
+    {transform:'translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px)) scale(.3) rotate(360deg)', opacity:1}
+  ], {duration:680, easing:'cubic-bezier(.35,-.25,.25,1)'}).onfinish = ()=>{
+    el.remove();
+    sfx.ice();
+    flake.animate([
+      {filter:'none', transform:'scale(1)'},
+      {filter:'drop-shadow(0 0 14px rgba(0,168,232,1))', transform:'scale(1.4)'},
+      {filter:'none', transform:'scale(1)'}
+    ], {duration:620, easing:'ease-out'});
+  };
+}
 /* ---------- 토스트 ---------- */
 let toastTimer=null;
 function toast(msg){
@@ -764,16 +1166,24 @@ function toast(msg){
 }
 
 /* ---------- 온도/배경 ---------- */
-function updateTemp(){
+function updateTemp(burst){
   const n = state.found.size;
   document.getElementById('tempNow').innerHTML = TEMPS[n].toFixed(1)+'<small>°C</small>';
   document.querySelector('#found b').textContent = n;
   document.getElementById('barFill').style.width = (n/7*100)+'%';
+  for(let i=1;i<=7;i++){
+    const el = document.getElementById('sf'+i);
+    if(!el) continue;
+    const on = (i<=6) ? n>=i : n>=7;
+    if(on && !el.classList.contains('on') && burst){ el.classList.add('pop'); setTimeout(()=>el.classList.remove('pop'), 600); }
+    el.classList.toggle('on', on);
+  }
   const p = n/7;
-  document.documentElement.style.setProperty('--bg-h', 24+(204-24)*p);
-  document.documentElement.style.setProperty('--bg-l', (96-4*p)+'%');
-  document.documentElement.style.setProperty('--accent', p<1?mix('#E8481C','#1D8FCB',p):'#1D8FCB');
-  if(n>0) snowBurst(Math.min(4+n,10));
+  document.documentElement.style.setProperty('--bg-h', 22+(200-22)*p);
+  document.documentElement.style.setProperty('--bg-l', (93-2*p)+'%');
+  document.documentElement.style.setProperty('--accent', p<1?mix('#FF4D6D','#00A8E8',p):'#00A8E8');
+  document.documentElement.style.setProperty('--frost', (p*0.55).toFixed(2));
+  if(burst && n>0) snowBurst(Math.min(4+n,10));
 }
 function mix(a,b,t){
   const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
@@ -799,17 +1209,46 @@ function showModal(html){
   document.getElementById('veil').classList.add('show');
 }
 function closeModal(){ document.getElementById('veil').classList.remove('show'); }
+function backToGame(){
+  document.getElementById('clear').style.display='none';
+  document.getElementById('game').style.display='flex';
+  renderFloors();
+}
 function showClear(){
   closeModal(); closeSheet();
   document.getElementById('game').style.display='none';
   document.getElementById('clear').style.display='flex';
-  document.getElementById('clearCode').textContent='COOL-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  if(!state.clearCode){
+    state.clearCode = 'COOL-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    saveState();
+  }
+  document.getElementById('clearCode').textContent = state.clearCode;
+  const master = state.scanned.size >= TOTAL_QR;
+  document.getElementById('agentName').textContent = (master ? '명탐정 ' : '탐정 ') + (state.codename || 'OO').replace(/^(명?탐정 )/,'');
+  document.getElementById('rankBox').innerHTML = master
+    ? '👑 <b>명탐정 승급!</b> 단서 ' + TOTAL_QR + '/' + TOTAL_QR + ' 완벽 수집 — 이 화면을 데스크에 보여주고 <b>추첨함에 이름을 남기면</b> 명탐정 경품 추첨 대상이 됩니다!'
+    : '🔎 현재 계급: <b>탐정</b> · 단서 ' + state.scanned.size + '/' + TOTAL_QR + '<br>단서를 <b>전부</b> 모으면 <b>명탐정</b> 승급 — 경품 추첨 자격이 생깁니다!';
+  document.getElementById('moreClues').style.display = master ? 'none' : 'block';
+  const d = new Date();
+  document.getElementById('clearDate').textContent = d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  sfx.clear();
   snowBurst(16);
+  if(!showClear._snow) showClear._snow = setInterval(()=>{
+    if(document.getElementById('clear').style.display === 'flex') snowBurst(2);
+  }, 650);
 }
 
-/* ---------- QR 링크 직접 접속(?c=코드) 자동 판정 ---------- */
-const urlCode = new URLSearchParams(location.search).get('c');
-if(urlCode){ startGame(); setTimeout(()=>scan(urlCode.toLowerCase()), 300); }
+/* ---------- 부팅 : 저장 복원 + QR 링크 판정 ---------- */
+const urlCode = (new URLSearchParams(location.search).get('c')||'').toLowerCase() || null;
+const resumed = loadState();
+if(resumed){
+  enterGame();
+  if(state.found.size >= 7){ if(!urlCode) showClear(); }
+  if(urlCode) setTimeout(()=>scan(urlCode), 400);
+} else if(urlCode){
+  pendingCode = urlCode;   /* 등록 먼저 → 등록 완료 시 자동 판정 */
+  openReg();
+}
 </script>
 </body>
 </html>
